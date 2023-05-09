@@ -1,0 +1,91 @@
+{
+ 
+      "sign up": "   تسجيل اكونت جديد",
+      "username":"اسم المستخدم",
+      "first_name":"الاسم الاول",
+      "last_name":"اسم العائله",
+      "email":"البريد إلكتروني ",
+      "password":"كلمة السر",
+      "Sign in":"تسجيل الدخول",
+      "Already have an account?":"بالفعل لديك حساب؟",
+      "Enter Your username":" أدخل اسم المستخدم الخاص بك  ",
+      "Enter Your first_name":"أدخل اسمك الأول  ",
+      "Enter Your last_name":" أدخل اسمك الأخير ",
+      "Create Account":"إنشاء حساب",
+
+
+
+      "Welcome back":"مرحبا بعودتك",
+      "Welcome back! please enter your details.":"مرحبا بعودتك! من فضلك ادخل بياناتك",
+      "Enter Your Email":"أدخل بريدك الإلكتروني",
+      "Remember me":" تذكرني",
+      "Don't hava an account?": "ليس لديك حساب؟",
+
+
+
+
+
+      "exam id:":"رقم الامتحان:",
+      "title:":"العنوان:",
+      "subject id:":"رقم الماده:",
+      "subject title:":"عنوان الماده:",
+      "subject hours:":"عدد الساعات:",
+      "start at:":"موعد البدء",
+      "end at:": " موعد الانتهاء",
+
+
+
+      "Category ID":" رقم الفئه",
+      "Category Name":"اسم الفئه",
+      "Category Name_ar":"اسم الفئه بالعربيه",
+       "Category Image":"صورة الفئه",
+      "update":"تعديل",
+      "delete":"مسح",
+      "Select":"تحديد",
+      "create":"انشاء",
+      "Update":"تعديل",
+      "Actions":"اجراءات",
+      "ordering":"ترتيب",
+      "Language":"لغه",
+      "Medicine ID":" رقم الدواء",
+      "Medicine Name":"اسم الدواء",
+      "product":"المنتج",
+      " id":"رقم المنتج",
+      " Name":"اسم المنتج",
+      " name_ar":"اسم المنتج بالعربيه",
+      " company":"الشركه المنتجه",
+      " price":"سعر المنتج",
+      "category":"الفئه",
+      "category Name":"اسم الفئه  ",
+      "category ID":"رقم الفئه",
+      "category Name_ar ":"اسم الفئه بالعربيه",
+      "drug":"الدواء",
+      "drug ID":"رقم الدواء",
+      "drug Name":"اسم الدواء",
+       "Update All":"تعديل الكل",
+       "drug name(Arabic)":"اسم الدواء",
+       "category name(Arabic)":"اسم الفئه",
+       "product Name":"اسم المنتج",
+       "product Name_ar":"اسم المنتج بالعربيه",
+      "category image":"صورة الفئه",
+      "price":"السعر",
+      "category Name(Arabic)":"اسم الفئه بالعربيه",
+      "filter with Category":"ترتيب بالفئه",
+      "filter with drugs":"ترتيب بالدواء",
+      "filter Price":"ترتيب بالسعر",
+      "product ID":"رقم المنتج"
+       
+
+
+
+
+
+
+
+
+
+
+
+
+     
+}
