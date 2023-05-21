@@ -1,14 +1,12 @@
 import axios from 'axios';
 import React,{useState , useEffect} from 'react'
-import { FaWindowClose } from 'react-icons/fa/index.esm';
-import { FaEdit } from 'react-icons/fa/index.esm';
+
 import 
 {
-  Menu, 
-  MenuItem, 
+ 
   Box,
   Button,
-  Typography,
+
   TableContainer,
   Table,
   TableHead,
@@ -17,26 +15,19 @@ import
   TableCell,
   
 } from "@mui/material";
-import FilterListIcon from '@mui/icons-material/FilterList';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
+
 import AddIcon from '@mui/icons-material/Add';
 import Paper from '@mui/material/Paper'
-import SearchIcon from '@mui/icons-material/Search';
-import InputBase from '@mui/material/InputBase';
-import Avatar from '@mui/material/Avatar';
+;
 import IconButton from '@mui/material/IconButton';
-import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
-import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
+
 import ClearIcon from '@mui/icons-material/Clear';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 
 
 import TextField from '@mui/material/TextField';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPencilAlt  } from '@fortawesome/free-solid-svg-icons';
+
 import {storage} from '../FireBase'
 import {ref , uploadBytes , getDownloadURL } from 'firebase/storage'
 
