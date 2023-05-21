@@ -13,7 +13,8 @@ import
   TableCell,
   
 } from "@mui/material";
-import FilterListIcon from '@mui/icons-material/FilterList';
+
+import AddIcon from '@mui/icons-material/Add';
 import Paper from '@mui/material/Paper'
 
 import IconButton from '@mui/material/IconButton';
@@ -25,7 +26,7 @@ import EditNoteIcon from '@mui/icons-material/EditNote';
 import TextField from '@mui/material/TextField';
 
 import './Category.css'
-
+ 
 import {storage} from '../FireBase'
 import {ref , uploadBytes , getDownloadURL } from 'firebase/storage'
 import {v4} from 'uuid'
