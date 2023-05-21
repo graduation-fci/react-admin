@@ -14,7 +14,7 @@ import '@fortawesome/fontawesome-free/css/all.css';
 i18n
   .use(initReactI18next) // passes i18n down to react-i18next
   .use(LanguageDetector)
- .use(HttpApi)
+ .use(HttpApi) 
   .init({ 
     supportedlngs:['en','ar'],  
     fallbackLng: "en",
