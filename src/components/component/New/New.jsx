@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import { FaPlus, FaTrash, FaEdit, FaList, FaChartBar, FaCapsules } from 'react-icons/fa';
 import './New.css';
 import {
@@ -60,12 +61,12 @@ const New = () => {
         <li>
           <button onClick={() => handleSetActiveDiv(1)} style={{ padding: '0.5rem' }}>
             <FaCapsules style={{ marginRight: '0.5rem' }} />
-            Drugs
+          Drugs
           </button>
         </li>
         <li>
           <button onClick={() => {
-  handleSetActiveDiv(2)}} style={{ padding: '0.5rem' }}>
+                handleSetActiveDiv(2) }} style={{ padding: '0.5rem' }}>
             <FaList style={{ marginRight: '0.5rem' }} />
             Categories
           </button>
@@ -105,7 +106,7 @@ const New = () => {
     <div className="content" style={{ marginTop: 0 }}>
       <div  className="content-container" style={{ display: activeDiv === 1 ? 'block' : 'none' }}>
         
-        <Home prop={() => handleSetActiveDiv(3)} />
+       <Home prop={() => handleSetActiveDiv(3)} />
       </div>
       <div className="content-container" style={{ display: activeDiv === 3 ? 'block' : 'none' }}>
         <Medicine />

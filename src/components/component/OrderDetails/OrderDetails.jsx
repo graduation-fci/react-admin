@@ -51,7 +51,7 @@ const OrderDetails = () => {
         <TableCell align="center"  style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>Product Name </TableCell>
         <TableCell align="center"  style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>Product Name(Arabic)</TableCell>
         <TableCell align="center"  style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>product Image</TableCell>
-        
+        <TableCell align="center"  style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>price</TableCell>
      
       </TableRow>
     </TableHead>
@@ -71,7 +71,7 @@ const OrderDetails = () => {
       />
    
       </TableCell>
-     
+      <TableCell  align="center"  style={{ padding: '4px' }}>{med.product.price}</TableCell>
     
     </TableRow>
    ))}
@@ -79,6 +79,18 @@ const OrderDetails = () => {
   </Table>
   </TableContainer>
 </Box>
+
+
+
+
+
+
+  
+
+
+
+
+
     </div>
   )
 }
