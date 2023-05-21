@@ -11,6 +11,7 @@ import Category from './../Category/Category';
 import New from './../New/New';
 import Dash from '../Dash/Dash';
 import OrderDetails from './../OrderDetails/OrderDetails';
+import Reset from '../Reset/Reset';
 
 
 
@@ -39,7 +40,7 @@ export default function App() {
       <Route path='/new' element={<New/>}/>
       <Route path='/dash' element={<Dash/>}/>
       <Route path='/orderdetails' element={<OrderDetails/>}/>
-     
+     <Route path='/reset' element={<Reset/>}/>
       </Routes>
       
     </div>

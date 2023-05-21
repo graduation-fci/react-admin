@@ -226,9 +226,13 @@ function getError(fieldName) {
          <Typography  variant="p" > Remember me</Typography>
       </label>
       <input className="form-check-input" type="checkbox" id="gridCheck"/>
-      
     </div>
   </div> 
+  <Box display="flex" justifyContent="flex-end"  marginTop="-1.5rem">
+  <Typography variant="p"> <Link href="/reset" underline="none">
+         Forget Password?
+        </Link></Typography>
+      </Box>
   <br/>
        <Box  m={2} >
         <Button type='submit' variant="contained" color="primary" style={{width:'100%'}} >{t("Sign in")}</Button>
