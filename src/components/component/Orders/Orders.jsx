@@ -1,5 +1,35 @@
 import axios, { Axios } from 'axios'
 import React, { useEffect, useMemo, useState } from 'react'
+
+import 
+{
+  Select,
+  Menu, 
+  MenuItem, 
+  Box,
+  Button,
+  Typography,
+  TableContainer,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  
+} from "@mui/material";
+import FilterListIcon from '@mui/icons-material/FilterList';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import AddIcon from '@mui/icons-material/Add';
+import Paper from '@mui/material/Paper'
+import SearchIcon from '@mui/icons-material/Search';
+import InputBase from '@mui/material/InputBase';
+import Avatar from '@mui/material/Avatar';
+import IconButton from '@mui/material/IconButton';
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
+
 import { useTranslation} from "react-i18next";
 import i18next from 'i18next';
 
@@ -12,6 +42,9 @@ import { FaSearch } from './../../../../node_modules/react-icons/fa/index.esm';
 import Cookies from 'js-cookie';
 
 import debounce from 'lodash.debounce';
+import avatar from '../../imgs/avatar.jpg'
+import URL from '../URL/URL';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -42,7 +75,7 @@ export default function Orders() {
   const { t }=useTranslation()
   const[medicines,setMedicines]=useState([]);
   const [val,setVal]=useState('')
-  let apiUrl='http://127.0.0.1:8000/store/orders/';
+  let apiUrl=URL;
   
   let [selectedMedicineId, setSelectedMedicineId] = useState({"ids":[]});
   let [selectedMedicine,setSelectedMedicine]=useState([{
@@ -61,6 +94,19 @@ export default function Orders() {
   })
   const[yeear,setYeear]=useState('')
   //order
+  let navigate=useNavigate();
+
+///menu
+const [anchorEl, setAnchorEl] = useState(null);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+
   const [selectedOrder, setSelectedOrder] = useState(null);
 
  const[currentId,setCurrentId]=useState('')
@@ -70,16 +116,17 @@ export default function Orders() {
     } else {
       setSelectedOrder(orderId);
     }}
+
  
    
      async function getMedicine(){
       let token= localStorage.getItem("userToken")
-      let response= await axios.get(apiUrl,{
+      let response= await axios.get(apiUrl+'store/orders/',{
         headers:{
           Authorization: 'JWT ' + token
         }})   
    
-     setMedicines(response.data);
+     setMedicines(response.data.results);
      
     
      console.log(response.data)
@@ -95,7 +142,7 @@ export default function Orders() {
  
  const fetchMedicines= async(currentPage)=>{
  let token= localStorage.getItem("userToken")
-      let resp= await axios.get(`http://127.0.0.1:8001/store/orders/?page=${currentPage}`,{
+      let resp= await axios.get(apiUrl+`store/orders/?page=${currentPage}`,{
         headers:{
           Authorization: 'JWT ' + token
         }})  
@@ -140,13 +187,13 @@ export default function Orders() {
   if(ordering!=null){
     queryParams['ordering']=ordering
   }
-  let url = `${baseUrl}?${getQueryString(queryParams)}`;
+  let url = `${baseUrl+'store/orders/'}?${getQueryString(queryParams)}`;
     let token= localStorage.getItem("userToken")
     let response = await axios.get(url,{
       headers:{
         Authorization: "JWT " + token,
       }}) 
-setMedicines(response.data);
+setMedicines(response.data.results);
 
 
 
@@ -161,7 +208,9 @@ setMedicines(response.data);
   }
    
 // improve performance
-  const handleChange= (e) =>fetchData ({search : e.target.value},{year:yeear});
+  const handleChange= (e) =>fetchData (
+    {search : e.target.value}
+    );
   const debouncedResults = useMemo(() => {
     return debounce(handleChange, 300);
   }, []);
@@ -207,7 +256,7 @@ const handleChange1= (event) => {
 
   function fillarr(){
     let token= localStorage.getItem("userToken")
-    fetch( `http://127.0.0.1:8001/store/orders/${currentId}/`, {
+    fetch( apiUrl+`store/orders/${currentId}/`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -218,13 +267,77 @@ const handleChange1= (event) => {
  
    
     } 
+
+
+
+    const handleUpdate = async () => {
+      let token = localStorage.getItem("userToken");
+    
+      try {
+        const response = await fetch(apiUrl + "medicine/drugs/bulk_patch/", {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "JWT " + token,
+          },
+          body: JSON.stringify(updatedData),
+        });
+    
+       
+          const data = await response.json();
+          if(data.updated!=0){
+          getMedicine();
+          console.log("Products updated:", data);
+          alert("Selected products have been updated successfully.");
+         
+        } else {
+          alert("Failed to update selected products.");
+    
+        }
+      } catch (error) {
+        console.error(error);
+       
+      }
+      setUpdatedData([])
+    setActiveDiv(0)
+      setInputarr([]);
+      console.log(JSON.stringify(inputarr));
+    };
+
+
    
    
    
+const [editingId, setEditingId] = useState(null);
+const [editingField, setEditingField] = useState(null);
+const [updatedData, setUpdatedData] = useState([]);
+
+const handleEditClick = (id, field) => {
+  setEditingId(id);
+  setEditingField(field);
+};
+
+const handleEditSave = (id, field, value) => {
+  console.log(`New value for field ${field} of medicine ${id}: ${value}`);
+  // Perform the update operation and save the new value
+  // ...
+  const updatedItem = { id, [field]: value };
+  setUpdatedData([...updatedData, updatedItem]);
+  setEditingId(null);
+  setEditingField(null);
+};
+useEffect(() => {
+  console.log(updatedData);
+}, [updatedData]);
+
    
  
 
+function handleDetails(id) {
+  const medicine = medicines.find((medicine) => medicine.id === id);
   
+ navigate('/orderdetails', { state: { medicine } }) 
+}
 
  
 
@@ -234,19 +347,92 @@ const handleChange1= (event) => {
   
     
     <>
+<Paper
+      component="form"
+       sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: '100%' }}
+     
+    >
+       <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
+        <SearchIcon />
+      </IconButton>
+      <InputBase
+        sx={{ ml: 1, flex: 1 }}
+        placeholder="Search..."
+        inputProps={{ 'aria-label': 'search...' }}
+        name='search'
+        onChange={debouncedResults}
+      />
+
+        <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
+        < NotificationsNoneIcon/>
+      </IconButton>
+      <Avatar
+      alt="Remy Sharp"
+      src={avatar}
+      sx={{width: 24, height: 24  }}
+/>
+     
+
+     
+    </Paper>
+
+
     
 
-   
+  {/* 
 <div   style={{ display: activeDiv === 1 ? 'block' : 'none'}}>
   
  <label htmlFor='order_status'>order_status</label>
  <input  className='cin' value={inputdata.order_status} type='text' onChange={(event) => setInputdata({ ...inputdata, order_status: event.target.value })} />
  <button onClick={fillarr}>fill</button>
 
- </div>
+  </div>*/}
 
       
+<Box position="absolute" top={100} right={60} sx={{ display: 'flex' }}>
+    
+      <Box m={2}>
+        <Button onClick={handleUpdate} variant="contained" color="primary" startIcon={<AddIcon />}>
+          Update
+        </Button>
+      </Box>
+    </Box>
 
+<Box sx={{ position: 'relative' }}>
+  <Box position="absolute" top={80} left={60} m={2}>
+    <Typography variant="h5" style={{ fontWeight: 'bold' }}>
+      Orders
+    </Typography>
+  </Box>
+ 
+</Box>
+
+
+<Box position="absolute" top={150} right={60} m={2}>
+      <FilterListIcon onClick={handleClick} />
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+      >
+        <MenuItem onClick={ ()=>fetchData ({order_status :'CAN' , search:val})}>orders Confirmed</MenuItem>
+        <MenuItem onClick={()=>fetchData ({order_staus :'COM', search:val})} >orders Completed</MenuItem>
+        <MenuItem onClick={ ()=>fetchData ({order_status :'PEN' , search:val})}>orders Pending</MenuItem>
+        <MenuItem onClick={()=>fetchData ({order_status :'CAN', search:val})} >orders Canceled</MenuItem>  
+        <MenuItem onClick={()=>fetchData ({ordering :'palced_at', search:val})} >placed at ascednd</MenuItem>  
+        <MenuItem onClick={()=>fetchData ({ordering :'-placed_at', search:val})} >placed at descend</MenuItem>   
+       < MenuItem><label htmlFor="year-dropdown">Filter by year:</label>
+      <select id="year-dropdown"  onClick={(e)=>fetchData({year:e.target.value})} >
+        <option value="">All years</option>
+        {years.map((year) => (
+          <option key={year} value={year} >
+            {year}
+          </option>
+        ))}
+      </select></MenuItem>
+      </Menu>
+    </Box>
+ 
    
     
  
@@ -255,12 +441,12 @@ const handleChange1= (event) => {
 
 
  
-     <div className="d-flex justify-content-end">
+     <div className="d-flex justify-content-start">
   
 
      <div className="dropdown">
       <button className="btn btn-link dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        <FaGlobe className='icon'/>  {t("Language")}
+        <FaGlobe className='icon'/>  
       </button>
      <ul className="dropdown-menu">
        {languages.map(({code,name,country_code}) =>(
@@ -284,169 +470,109 @@ const handleChange1= (event) => {
 
   </div>
   
-  <div className='container'>
-  <div className='d-flex justify-content-start position-relative'>
-    <input
-      placeholder='Search...'
-      name='search'
-      onChange={debouncedResults}
-      style={{ paddingLeft: '2.5rem' }} // Add some left padding to make room for the icon
-    />
-    <span className="fa fa-search form-control-feedback  justify-content-start   position-absolute" style={{ left: '0.5rem', top: '50%', transform: 'translateY(-50%)' }}></span>
-  </div>
-</div>
 
 
-<div>
-      <label htmlFor="year-dropdown">Filter by year:</label>
-      <select id="year-dropdown"  onClick={(e)=>fetchData({year:e.target.value})} >
-        <option value="">All years</option>
-        {years.map((year) => (
-          <option key={year} value={year} >
-            {year}
-          </option>
-        ))}
-      </select>
-    </div>
-   
-  
+
   
 
-  <div className="container">
-     <div className="d-flex justify-content-start">
    
-     <div className="dropdown">
-      <button className="btn btn-link dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        <FaFilter className='icon'/> {t("Filter")}
-      </button>
-     <ul className="dropdown-menu">
+  <Box   sx={{
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  height: '100vh',
+
+}}>
+
+  <TableContainer component={Paper}
+ sx={{ maxWidth: '90%',maxHeight:"70%" , borderRadius: '10px' }}
+>
+ <Table aria-label='simple table' 
+ stickyHeader
+ >
+ <TableHead>
+      <TableRow>       
+        <TableCell  align="center"  style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{t("Order ID")}</TableCell>
+        <TableCell  align="center"   style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{t("Customer Id")}</TableCell>
+        <TableCell align="center"  style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{t("order Status")}</TableCell>
+        <TableCell align="center"  style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{t("Total Price")}</TableCell>
+        <TableCell align="center"  style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{t("Placed at")}</TableCell>
+        <TableCell align="center"  style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{t("City")}</TableCell>
+        <TableCell align="center"  style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{t("Details")}</TableCell>
+   
+      </TableRow>
+    </TableHead>
+    
+    <TableBody>
+  {medicines.map((medicine) => (
+    <TableRow key={medicine.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
       
 
-    <li> 
+      <TableCell    align="center"   style={{ padding: '4px' }}>{medicine.id}</TableCell>
+
+      <TableCell align="center"
+        style={{ padding: '4px' }}>
+        {medicine.customer}
+     
+      </TableCell>
+
+      <TableCell
+         align='center'
+        style={{ padding: '4px' }}
+        onClick={() => handleEditClick(medicine.id, 'order_status')}
+      >
+        {editingId === medicine.id && editingField === 'order_status' ? (
+        
+<input
+type="text"
+defaultValue={medicine.order_status}
+onBlur={(event) =>
+handleEditSave(medicine.id, 'order_staus', event.target.value)
+}
+/>
+        ) : (
+          medicine.order_status
+        )}
+      </TableCell>
       
-      <button className="dropdown-item" name='starts_at' onClick={ ()=>fetchData ({order_status :'PEN' , search:val,year:yeear})} 
-      >
-        Order_pending
-       </button>
-       <button className="dropdown-item"  name='ends_at' onClick={()=>fetchData ({order_status :'COM', search:val,year:yeear})} 
-      >
-       Order_completed
-       </button>
-       <button className="dropdown-item"  name='-starts_at' onClick={()=>fetchData ({order_status :'CON', search:val,year:yeear})}
-      >
-       Order_confirmed
-       </button>
-       <button className="dropdown-item"   name='-ends_at' onClick={()=>fetchData ({order_status :'CAN', search:val,year:yeear})} 
-      >
-        Order_canceled
-       </button>
-       <button className="dropdown-item"   name='-ends_at' onClick={()=>fetchData ({ ordering:'placed_at',  search:val,year:yeear})} 
-      >
-        placed_at ascend
-       </button>
-       <button className="dropdown-item"   name='-ends_at' onClick={()=>fetchData ({ ordering:'-placed_at',   search:val,year:yeear})} 
-      >
-        placed_at descend
-       </button>
-      </li>
+      <TableCell align="center"
+        style={{ padding: '4px' }}>
+        {medicine.total_price}
+     
+      </TableCell>
+      
+      <TableCell align="center"
+        style={{ padding: '4px' }}>
+        {medicine.placed_at}
+     
+      </TableCell>
+      
+      <TableCell align="center"
+        style={{ padding: '4px' }}>
+        {medicine.address.city}
+     
+      </TableCell>
+      <TableCell align="center"
+        style={{ padding: '4px' }}>
+         <Button  onClick={()=>handleDetails(medicine.id)}>Details</Button>
+      </TableCell>
+      
+
+    </TableRow>
+  ))}
+</TableBody>
+  </Table>
+  </TableContainer>
+</Box>
+  
 
   
 
-  </ul>
+  
+   
+  
+
  
-  </div>
-   </div>
-  </div>
-
-  
-   
-  
-
-  
-  <div className="card-container">
-      {medicines.map((medicine) => (
-        <div key={medicine.id} className="card">
-          <div className="card-header">
-            <span>{t("Order ID")}:</span> {medicine.id}
-          </div>
-          <div className="card-body">
-            <div>
-              <span>{t("Customer ID")}:</span> {medicine.customer}
-            </div>
-            <div>
-              <span>{t("Order Status")}:</span> {medicine.order_status}
-            </div>
-            <div>
-              <span>{t("Total Price")}:</span> {medicine.total_price}
-            </div>
-            <div>
-              <span>{t("placed_at")}:</span> {medicine.placed_at}
-            </div>
-            <div>
-              <span>{t("Payment_Method")}:</span> {medicine.payment_method}
-            </div>
-            {selectedOrder === medicine.id && (
-              <div>
-                <div>
-                    <span>City: </span>{medicine.address.city}
-                </div>
-                <div>
-                    <span>Street: </span>{medicine.address.street}
-                </div>
-                <div>
-                    <span>Description: </span>{medicine.address.description}
-                </div>
-                <div>
-                    <span>Phone: </span>{medicine.address.phone}
-                </div>
-                <div>
-                    <span>Type: </span>{medicine.address.type}
-                </div>
-                <div>
-                    <span>Title: </span>{medicine.address.title}
-                </div>
-                <div>
-                    <h4> -Items</h4>
-                </div>
-                <div>
-                    <span>Items_ID: </span>{medicine.items[0].id}
-                </div>
-                <div>
-                    <span>Items_quantity: </span>{medicine.items[0].quantity}
-                </div>
-                <div>
-                    <span>Unit_price: </span>{medicine.items[0].unit_price}
-                </div>
-                <div>
-                    <span>Product_ID: </span>{medicine.items[0].product.id}
-                </div>
-                <div>
-                    <span>Name: </span>{medicine.items[0].product.name}
-                </div>
-                <div>
-                    <span>Name_ar: </span>{medicine.items[0].product.name_ar}
-                </div>
-                <div>
-                    <span>Product_Price: </span>{medicine.items[0].product.price}
-                </div>
-                <div>
-                    <span>Product_ID: </span>{medicine.items[0].product.id}
-                </div>
-                <div>
-                <button onClick={() => (handleSetActiveDiv({id: medicine.id, order_status: medicine.order_status, number: 1}), setCurrentId(medicine.id))}> update</button>
-                </div>
-              </div>
-            )}
-          </div>
-          <div className="card-footer">
-          <button className="update-btn" onClick={() => handleDetailsClick(medicine.id)}>
-               {selectedOrder === medicine.id ? t("Close Details") : t("Details")}
-           </button>
-          </div>
-        </div>
-      ))}
-    </div>
-
 
 
 

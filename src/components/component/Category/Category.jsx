@@ -1,5 +1,39 @@
 import axios from 'axios';
 import React,{useState} from 'react'
+
+import 
+{
+  Menu, 
+  MenuItem, 
+  Box,
+  Button,
+  Typography,
+  TableContainer,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  
+} from "@mui/material";
+import FilterListIcon from '@mui/icons-material/FilterList';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import AddIcon from '@mui/icons-material/Add';
+import Paper from '@mui/material/Paper'
+import SearchIcon from '@mui/icons-material/Search';
+import InputBase from '@mui/material/InputBase';
+import Avatar from '@mui/material/Avatar';
+import IconButton from '@mui/material/IconButton';
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
+import ClearIcon from '@mui/icons-material/Clear';
+import EditNoteIcon from '@mui/icons-material/EditNote';
+
+
+import TextField from '@mui/material/TextField';
+
 import './Category.css'
 import { FaWindowClose } from 'react-icons/fa/index.esm';
 import { FaEdit } from 'react-icons/fa/index.esm';
@@ -163,79 +197,178 @@ const Category = () => {
 
     <>
 
+
+<Box sx={{ display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  height:'50vh',
+  flexDirection: 'column' }}>
+  <TextField
+    id="outlined-basic"
+    label="Category Name"
+    variant="outlined"
+    name='name'
+    value={inputdata.name}
+    onChange={handleChange}
+    style={{ marginBottom: '16px' }}
+  />
+ 
+  <TextField
+    id="outlined-basic"
+    label="Category Name(Arabic)"
+    variant="outlined"
+    name='name_ar'
+    value={inputdata.name_ar}
+    onChange={handleChange}
+    style={{ marginBottom: '16px' }}
+  />
   
-    <div className='Medicine'>
-    <span>
-     <h2>Categoey  </h2>
-      
-    </span>
-      
-      <input type="text" autoComplete='off' name='name' value={inputdata.name} onChange={handleChange} placeholder='Enter The Name' /><br/>
-      <input type="text" autoComplete='off' name='name_ar' value={inputdata.name_ar} onChange={handleChange} placeholder='Enter The Name_ar' /><br/>
-      <div>
-      <label htmlFor="image-input">Choose an image:</label>
-     <input type="file"  onChange={(event) =>{setImageFile(event.target.files[0])}} />
-      <button onClick={handleUpload} >upload</button>
-    </div>
-      <button onClick={fillarr}>add</button>
-     
+  <input type="file" onChange={(event) =>{setImageFile(event.target.files[0])}} style={{ marginBottom: '16px' }} />
+  <Button variant="contained" color="primary" onClick={handleUpload} style={{ marginBottom: '16px' }}>upload</Button>
+ 
+  <Box m={2}>
+    <Button variant="contained" color="primary" startIcon={<AddIcon />} onClick={() => {
+  fillarr();
+  window.scrollBy(0, 500);
+}}> 
+      add Category
+    </Button>
+  </Box>
+</Box>
 
-   </div>
+  
+   
+
+
+
+
+
+
+
+ 
+<Box   sx={{
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  height: '70vh',
+ marginTop:"10px"
+
+}}>
+
+
+
+<TableContainer component={Paper}
+ sx={{ maxWidth: '50%',maxHeight:"90%" , borderRadius: '10px' }}
+>
+ <Table aria-label='simple table' 
+ stickyHeader
+ >
+ <TableHead>
+      <TableRow>
+      
+       
+        <TableCell  style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{("Category Name")}</TableCell>
+        <TableCell  style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{("Category Name(Arabic)")}</TableCell>
+        <TableCell  style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{("Category Image")}</TableCell>
+        <TableCell style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>
+          {("update")}
+        </TableCell>
+        <TableCell style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>
+          {("delete")}
+        </TableCell>
+     
+       
+      </TableRow>
+    </TableHead>
+    
+    <TableBody>
+  {inputarr.map((info,index) => (
+    <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+      <TableCell  style={{ padding: '4px' }}>{info.name}</TableCell>
+      <TableCell  style={{ padding: '4px' }}>{info.name_ar}</TableCell>
+      <TableCell  style={{ padding: '4px' }}>{info.image_file}</TableCell>
+    
+
+
+      <TableCell>
+         <IconButton type="button" sx={{ p: '10px' }} onClick={()=>{deleteRow(index)}}>
+        <ClearIcon />
+      </IconButton>
+      </TableCell>
+
+   
+      <TableCell>
+         <IconButton type="button" sx={{ p: '10px' }} onClick={() => handleEdit(index)} >
+        <EditNoteIcon />
+      </IconButton>
+      </TableCell>
+       
+
+
+
+    </TableRow>
+    
+    )
+  
+ 
+ 
+    
+)}
+
+  
+</TableBody>
+  </Table>
+
+  </TableContainer>
+  <Box m={2}>
+        <Button onClick={medicineSubmit} variant="contained" color="primary">
+          send
+        </Button>
+      </Box>
+</Box>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
   
-    <div className='Med'>
+
  
     
  
 
 
-<table border={1} cellPadding={10} width={30}>
- <tbody>
- <tr>
-    <th>name</th>
-    <th> name_ar</th>
-    <th>image_name </th>
-    <th>delet</th>
-    <th>update</th>
- </tr>
    
-    {
-      inputarr.map
-       ((info,index)=>{
-        return(
-            <tr key={index}>
-               
-          <td>{info.name}</td>
-          <td>{info.name_ar}</td>
-          <td> {info.image_file}</td>
-          <td><FaWindowClose  className='icon' onClick={()=>{deleteRow(index)}}/></td>
-          <td><FaEdit className='icon'onClick={()=>handleEdit(index)} /></td>
-
-            </tr>
-          
-        )
-       }
-      
-      
-         
-    )}
-    </tbody>
-   </table>
+   
  
    
     
     
-     
-   <button onClick={medicineSubmit}>send</button>
-   <div className="card">
-      <div className="card-body">
-        <h4 className="card-title">Results</h4>
-        <p className="card-text">Success count: {resp}</p>
-        <p className="card-text">Fail count: {fail}</p>
-      </div>
-    </div>
+ 
    
-   </div>
+
    
 
     

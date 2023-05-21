@@ -1,7 +1,45 @@
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
-//import Joi from 'joi';
+import Joi from 'joi';
 import React , {useEffect} from 'react'
+
+
+import 
+{
+  Link,
+  Menu, 
+  MenuItem, 
+  Box,
+  Button,
+  Typography,
+  TableContainer,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  
+} from "@mui/material";
+import FilterListIcon from '@mui/icons-material/FilterList';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import AddIcon from '@mui/icons-material/Add';
+import Paper from '@mui/material/Paper'
+import SearchIcon from '@mui/icons-material/Search';
+import InputBase from '@mui/material/InputBase';
+import Avatar from '@mui/material/Avatar';
+import IconButton from '@mui/material/IconButton';
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
+import ClearIcon from '@mui/icons-material/Clear';
+import EditNoteIcon from '@mui/icons-material/EditNote';
+
+
+import TextField from '@mui/material/TextField';
+
+
+
 import { useTranslation} from "react-i18next";
 import i18next from 'i18next';
 import { useState } from 'react'
@@ -36,56 +74,78 @@ export default function Login() {
 
   const { t }=useTranslation()
   
- /*let[errorList,setErrorList]=useState([]);*/
+ let[errorList,setErrorList]=useState([]);
  let[error,setError]=useState('');
  let navigate = useNavigate()
  let [user,setUser]=useState({
   username:'',password:''});
+ 
   function getUser(e){
     let myUser={...user};
     myUser[e.target.name]=e.target.value;
     setUser(myUser);
     console.log(myUser);
+   
   }
   async function formSubmit(e){
     e.preventDefault();
-    let response= await axios.post("http://localhost:8000/auth/jwt/create", user);
-    localStorage.setItem('userToken',response.data.access)
-    localStorage.setItem('refreshToken',response.data.refresh)
-    if(response.status===200){
-        navigate('/new')
+   
+   
+
+    let validationResponse =  validateRegisterForm();
+    console.log(validationResponse)
+    if(validationResponse.error){
+     setErrorList(validationResponse.error.details)
     }
-    console.log(response);
-    
-   /*let validationResponse =  validateRegisterForm();
-   if(validationResponse.error){
-   /* setErrorList(validationResponse.error.details);
-   }
-   else{ */
-    
-   
-   
-   /*const response= await axios.post("http://localhost:8000/auth/users/", user);*/
+    else
+    {
+      let response= await axios.post("http://64.225.110.140:8000/auth/jwt/create", user);
+      localStorage.setItem('userToken',response.data.access)
+      localStorage.setItem('refreshToken',response.data.refresh)
+      if(response.status===200){
+        navigate('/new')
+        console.log(response);
+
+
+    }
+     
   
-  /* if(data.message ==="success"){
-       
-   }
-else{
-     setError(data.message);
-}
-console.log(response.data);
-}*/
-/*function validateRegisterForm(){
+}}
+ 
+
+
+function validateRegisterForm(){
   const schema = Joi.object({
-    email:joi.string().email({tlds:{allow:['com','net','org']}}).required
-    password:Joi.string().pattern(new RegExp('^[A-Z][a-z]{2,8}$')),
-   
-
+    username: Joi.string().min(3).max(30).required(), 
+    password: Joi.string()
+    .pattern(new RegExp('^[A-Z]+[a-z]+[a-zA-Z0-9]*$'))
+    .required()
+    .messages({
+      'string.pattern.base':
+        'Password incorrect',
+    }),
   
-});
-  return schema.validate(user ,{abortEarly:false});*/
+ 
+  
+  
+  });
 
+  return schema.validate(user ,{abortEarly:false});
+}
+function getError(fieldName) {
+  const error = errorList.find((err) => err.path.includes(fieldName));
+  return error ? error.message : '';
   }
+
+
+
+
+
+
+
+
+
+
   useEffect( ()=>{
     document.body.dir=currentLanguage.dir || 'ltr'
   },[currentLanguage])
@@ -112,42 +172,79 @@ console.log(response.data);
         
       <form onSubmit={formSubmit}>
       <h2>{t("Welcome back")}</h2>
+      
       <br/>
         <h5>{t("Welcome back! please enter your details.")}</h5>
         <br/>
-        {error&& <div className="alert alert-danger"> </div>}
-        {/* {errorList.map((error,index)=> index===1? 
-        <div className="alert alert-danger p-2">password invalid: password must be at least 8 characters </div>:
-        <div className="alert alert-danger p-2">{error.message}</div> 
-        )}*/}
+       
     
-      <div className="col-xs-4">
-         <label htmlFor='username'>{t("username")}</label>
-         <input  autoFocus onChange={getUser} type='text' placeholder={t('Enter Your username')}  className="form-control input-sm" name='username'/>
-        </div>  
-        <br/>
-        <div className="col-xs-4">
-         <label htmlFor='password'>{t("password")}</label>
-         <input onChange={getUser} type='password' placeholder= {t('password')}  className="form-control input-sm " name='password'/>
+      
+        <Box sx={{ display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          flexDirection: 'column' }}>
+         <TextField 
+          id="username"
+         label="Username"
+          variant="outlined"   
+       
+          InputProps={{
+            style: {
+              height: '50px' // Set to your preferred height
+            }
+          }} style={{ marginBottom: '16px', width: '100%'}}  autoFocus onChange={getUser} type='text' 
+          placeholder={t('Enter Your Username')}   
+          name='username'
+          error={Boolean(getError('username'))}
+      helperText={getError('username')}
+          
+          />
+        
+        
+        
+        
+         <TextField  id="password"
+       label="Password"
+        variant="outlined" style={{ marginBottom: '16px', width: '100%' }}  
+       
+        InputProps={{
+          style: {
+            height: '50px' // Set to your preferred height
+          }
+        }} onChange={getUser} 
+        type='password' placeholder= {t('Enter The Password')} 
+          name='password'
+          error={Boolean(getError('password'))}
+          helperText={getError('password')}
+          />
          
-        </div> 
-        <br/>
+       </Box>
+      
         <div className="form-group">
     <div className="form-check">
-      <input className="form-check-input" type="checkbox" id="gridCheck"/>
-      <label className="form-check-label" htmlFor="gridCheck">
-        {t("Remember me")}
+    <label className="form-check-label" htmlFor="gridCheck">
+         <Typography  variant="p" > Remember me</Typography>
       </label>
+      <input className="form-check-input" type="checkbox" id="gridCheck"/>
+      
     </div>
   </div> 
   <br/>
-       <div className='d-flex mb-1'>
-        <button type='submit' className="btn btn-primary  flex-fill me-1">{t("Sign in")}</button>
-          </div>
-          <br/>
-          <div className='d-flex justify-content-center align-items-center'>
-           <li className='px-2' >{t("Don't hava an account?")}<NavLink className='link-primary' to='/register'>  {t("sign up")} </NavLink></li>
-           </div>
+       <Box  m={2} >
+        <Button type='submit' variant="contained" color="primary" style={{width:'100%'}} >{t("Sign in")}</Button>
+         </Box>
+        
+        
+          <Typography   variant="h6" style={{width:'100%',textAlign:'center',justifyContent:'center'}}   >
+           {t("Don't hava an account?")} <Link href="/register" underline="none">
+         {t("sign up")} 
+          </Link>  
+          </Typography>
+          
+
+
+
+          
       </form>
       </div>
       </div>
@@ -178,7 +275,7 @@ console.log(response.data);
      </div>
      <div class="parentContainer">
   <div class="leftSide d-flex justify-content-center align-items-center">
-    <img src={log} style={{ width: '800px', height: 'auto' }} />
+    <img src={log} style={{ width: '600px', height: 'auto' }} />
   </div>
 </div>
    

@@ -1,5 +1,38 @@
 import axios from 'axios';
 import React,{useState} from 'react'
+
+import 
+{
+  Menu, 
+  MenuItem, 
+  Box,
+  Button,
+  Typography,
+  TableContainer,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  
+} from "@mui/material";
+import FilterListIcon from '@mui/icons-material/FilterList';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import AddIcon from '@mui/icons-material/Add';
+import Paper from '@mui/material/Paper'
+import SearchIcon from '@mui/icons-material/Search';
+import InputBase from '@mui/material/InputBase';
+import Avatar from '@mui/material/Avatar';
+import IconButton from '@mui/material/IconButton';
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
+import ClearIcon from '@mui/icons-material/Clear';
+import EditNoteIcon from '@mui/icons-material/EditNote';
+
+
+import TextField from '@mui/material/TextField';
 import './Medicine.css'
 import { FaWindowClose } from 'react-icons/fa/index.esm';
 import { FaEdit } from 'react-icons/fa/index.esm';
@@ -84,69 +117,101 @@ async function medicineSubmit(e) {
 
     <>
 
-  <div>
-    <div className='Medicine'>
-      <input type="text" autoComplete='off' name='name' value={inputdata.name} onChange={handleChange} placeholder='Enter The Name ' />
-      <button onClick={fillarr}>add</button>
-     
-
-   </div>
-    
-  
-    <div className='Med'>
+<Box   sx={{ display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  height:'20vh' }}>
  
-<table border={1} cellPadding={10} width={30}>
- <tbody>
- <tr>
-    <th>name</th>
-    <th>delete</th>
-    <th>update</th>
- </tr>
-   
-
-  
+    <TextField  id="outlined-basic" label="Drug Name" variant="outlined"name='name' value={inputdata.name} onChange={handleChange}  />
+    <Box m={2}>
+        <Button onClick={fillarr} variant="contained" color="primary" startIcon={<AddIcon />}>
+          add Drug
+        </Button>
+      </Box>
+     
+      </Box>
 
  
+    
+   <Box   sx={{
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  height: '70vh',
+
+}}>
+
+
+
+<TableContainer component={Paper}
+ sx={{ maxWidth: '50%',maxHeight:"70%" , borderRadius: '10px' }}
+>
+ <Table aria-label='simple table' 
+ stickyHeader
+ >
+ <TableHead>
+      <TableRow>
+      
+       
+        <TableCell  style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{("Drug Name")}</TableCell>
+        <TableCell style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>
+          {("update")}
+        </TableCell>
+        <TableCell style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>
+          {("delete")}
+        </TableCell>
+     
+       
+      </TableRow>
+    </TableHead>
+    
+    <TableBody>
+  {inputarr.map((info,index) => (
+    <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+      <TableCell  style={{ padding: '4px' }}>{info.name}</TableCell>
+
+
+
+      <TableCell>
+         <IconButton type="button" sx={{ p: '10px' }} onClick={()=>{deleteRow(index)}}>
+        <ClearIcon />
+      </IconButton>
+      </TableCell>
 
    
-    {
-      inputarr.map
-       ((info,index)=>{
-        return(
-          <tr key={index}>
-           <td>{info.name}  
-             
-             </td> 
-             <td><FaWindowClose  className='icon' onClick={()=>{deleteRow(index)}} style={{ color: 'red'}}/> </td>
-             <td>
-             <FaEdit className='icon' onClick={() => handleEdit(index)}/></td>
-            
-            </tr>
-          
-        )
-       }
-      
-      
-         
-    )}
-   
-  
- </tbody>
-   
-    </table>
+      <TableCell>
+         <IconButton type="button" sx={{ p: '10px' }} onClick={() => handleEdit(index)} >
+        <EditNoteIcon />
+      </IconButton>
+      </TableCell>
+       
+
+
+
+    </TableRow>
     
-     
-   <button onClick={medicineSubmit}>send</button>
-   <div className="card">
-      <div className="card-body">
-        <h4 className="card-title">Results</h4>
-        <p className="card-text">Success count: {resp}</p>
-        <p className="card-text">Fail count: {fail}</p>
-      </div>
-    </div>
-   
-   </div>
-   </div>
+    )
+  
+ 
+ 
+    
+)}
+
+  
+</TableBody>
+  </Table>
+
+  </TableContainer>
+  <Box m={2}>
+        <Button onClick={medicineSubmit} variant="contained" color="primary">
+          send
+        </Button>
+      </Box>
+</Box>
+
+
+
+  
 
     
     

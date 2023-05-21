@@ -1,5 +1,32 @@
 import axios, { Axios } from 'axios'
 import React, { useRef , useEffect, useMemo, useState } from 'react'
+import 
+{
+  Menu, 
+  MenuItem, 
+  Box,
+  Button,
+  Typography,
+  TableContainer,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  
+} from "@mui/material";
+import FilterListIcon from '@mui/icons-material/FilterList';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import AddIcon from '@mui/icons-material/Add';
+import Paper from '@mui/material/Paper'
+import SearchIcon from '@mui/icons-material/Search';
+import InputBase from '@mui/material/InputBase';
+import Avatar from '@mui/material/Avatar';
+import IconButton from '@mui/material/IconButton';
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import { useTranslation} from "react-i18next";
 import i18next from 'i18next';
 
@@ -12,6 +39,7 @@ import Cookies from 'js-cookie';
 
 import debounce from 'lodash.debounce';
 import Category from './../Category/Category';
+import avatar from '../../imgs/avatar.jpg'
 import URL from './../URL/URL';
 
 
@@ -81,7 +109,16 @@ export default function Products1({prop}) {
 
  const[anyCat,setAnycat]=useState(null)
 
+ const [anchorEl, setAnchorEl] = useState(null);
  
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
  
    
      async function getMedicine(){
@@ -129,21 +166,30 @@ export default function Products1({prop}) {
 }
 
 
-const handleDrugSelect = (drug) => {
-  setAnyDrug(drug.id);
-  fetchData({ drug: drug.id });
+const handleDrugSelect = (id) => {
+  setAnyDrug(id);
+  fetchData({ drug: id });
+};
+const handleCategorySelect = (id) => {
+  setAnycat(id);
+  fetchData({ category: id });
 };
 
    //filter*************
-   async function fetchData({ search, ordering } ) {
+   async function fetchData({ search, ordering,drug,category } ) {
     let baseUrl = apiUrl;
     let queryParams = {};
     if(anyCat!=null){
       queryParams['category']=anyCat;
     }
 
-    if (anyDrug != null) {
-      queryParams["drug"] = anyDrug;
+    if (drug != null) {
+      queryParams["drug"] = drug;
+      setAnyDrug(drug)
+    }
+    if(category!=null){
+      queryParams["category"]=category;
+      setAnycat(category)
     }
     
     if (search != null) {
@@ -388,115 +434,57 @@ const [editingId, setEditingId] = useState(null);
 
     <>
 
+<Paper
+      component="form"
+       sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: '100%' }}
+     
+    >
+       <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
+        <SearchIcon />
+      </IconButton>
+      <InputBase
+        sx={{ ml: 1, flex: 1 }}
+        placeholder="Search..."
+        inputProps={{ 'aria-label': 'search...' }}
+        name='search'
+        onChange={debouncedResults1}
+      />
+
+        <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
+        < NotificationsNoneIcon/>
+      </IconButton>
+      <Avatar
+      alt="Remy Sharp"
+      src={avatar}
+      sx={{width: 24, height: 24  }}
+/>
+     
+
+     
+    </Paper>
+
+ 
+
+ 
+
+
+
+
+
+
 <nav>
       <ul style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <input
-      placeholder='Search...'
-      name='search'
-      onChange={debouncedResults1}
-      style={{ paddingLeft: '2.5rem' }} // Add some left padding to make room for the icon
-     />
-   {/**filter category */}
-     
+        
 
   
-  <div className="dropdown category-dropdown">
-    <button className="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-   {t("filter with Category")}
-    </button>
-      <ul className="dropdown-menu">
-    
-      <li>
-      <div className="input-group mb-3">
-        <input type="text"  name='categoryMissed'  onChange={(event)=>handleSearchInputChange(event)}  placeholder="Search by category name..." />
-     
-      </div>
-    </li>
-
-
-
-      {catArr.map((category) => (
-        <li key={category.id}>
-         <button className="dropdown-item" onClick={() => { fetchData({category : category.id})
-         setAnycat(category.id);
-        }}>
-           {category.name}</button>
-        </li>
-      ))}
-    </ul>
-  
-</div>
-{/* filter with drugs */}
-<div className="dropdown drug-dropdown">
-      <button
-        className="btn dropdown-toggle"
-        type="button"
-        data-bs-toggle="dropdown"
-        aria-expanded="false"
-      >
-        {t("filter with drugs")}
-      </button>
-      <ul className="dropdown-menu">
-        <li>
-          <div className="input-group mb-3">
-            <input
-              type="text"
-              name="categoryMissed"
-              onChange={(event) => handleSearchDrugChange(event)}
-              placeholder="Search by category name..."
-            />
-          </div>
-        </li>
-        {drugArr.map((drug) => (
-          <li key={drug.id}>
-            <button
-              className={`dropdown-item ${anyDrug === drug.id ? "active" : ""}`}
-              onClick={() => handleDrugSelect(drug)}
-            >
-              {drug.name}
-            </button>
-          </li>
-        ))}
-      </ul>
-    </div>
-
-{/**orderinggg */}
-
-<div className="dropdown">
-      <button className="btn btn-link dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        <FaFilter className='icon'/> {t("ordering")}
-      </button>
-     <ul className="dropdown-menu">
-      
-
-    <li> 
-      
-      <button className="dropdown-item" name='starts_at' onClick={ ()=>fetchData ({ordering :'name' , search:val , price__gt:gt,price__lt:lt})} 
-      >
-         ascending
-       </button>
-       <button className="dropdown-item"  name='ends_at' onClick={()=>fetchData ({ordering :'-name', search:val, price__gt:gt,price__lt:lt})} 
-      >
-        descending
-       </button>
-       <button className="dropdown-item"  name='-starts_at' onClick={()=>fetchData ({ordering :'price', search:val, price__gt:gt,price__lt:lt})}
-      >
-       high price
-       </button>
-       <button className="dropdown-item"   name='-ends_at' onClick={()=>fetchData ({ordering :'-price', search:val, price__gt:gt,price__lt:lt})} 
-      >
-         low price
-       </button>
-      </li>
-
   
 
-  </ul>
- 
-  </div>
+
+
 {/*price filter */}
-<div className="dropdown">
-      <button className="btn btn-link dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+<Box position="absolute" top={110} right={400} m={2}>
+<div className="">
+      <button className="btn btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         {t("filter Price")}
       </button>
      <ul className="dropdown-menu">
@@ -533,23 +521,7 @@ const [editingId, setEditingId] = useState(null);
 
   </div>
 
-
-  {/**buttons */}
-  <div>
-  <button onClick={prop} className='    ' >
-      <FaPlus className='icon'/>  {t("create")}
-      </button>  
-       </div>
-      <div> 
-        <button onClick={handleDelete} className='   '>
-      <FaTrash className='icon'/> {t("delete")}
-    </button>
-     </div>
-    <div>
-      <button onClick={handleUpdate} className='   '>
-    <FaEdit className='icon'/> {t("update")}
-    </button> 
-    </div>
+  </Box>
 
     {/**languageee */}
     <div className="dropdown">
@@ -584,6 +556,127 @@ const [editingId, setEditingId] = useState(null);
     </nav>
   
     
+
+    <Box sx={{ position: 'relative' }}>
+  <Box position="absolute" top={0} left={60} m={2}>
+    <Typography variant="h5" style={{ fontWeight: 'bold' }}>
+      Products
+    </Typography>
+  </Box>
+  </Box>
+
+
+
+  <Box position="absolute" top={60} right={60} sx={{ display: 'flex' }}>
+      <Box m={2}>
+        <Button onClick={prop} variant="contained" color="primary" startIcon={<AddIcon />}>
+          New Products
+        </Button>
+      </Box>
+      <Box m={2}>
+        <Button onClick={handleDelete}  variant="contained" color="primary" startIcon={<AddIcon />}>
+          Delete
+        </Button>
+      </Box>
+      <Box m={2}>
+        <Button onClick={handleUpdate} variant="contained" color="primary" startIcon={<AddIcon />}>
+          Update
+        </Button>
+      </Box>
+    </Box>
+    
+    
+    < Box  position="absolute" top={110} right={250} m={2}>
+  
+      <button
+        className="btn dropdown-toggle"
+        type="button"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+      >
+        {t("filter with drugs")}
+      </button>
+      <ul className="dropdown-menu">
+        <li>
+        
+            <input
+              type="text"
+              name="categoryMissed"
+              onChange={(event) => handleSearchDrugChange(event)}
+              placeholder="Search by category name..."
+            />
+         
+        </li>
+        {drugArr.map((drug) => (
+          <li key={drug.id}>
+            <button
+              className={`dropdown-item ${anyDrug === drug.id ? "active" : ""}`}
+              onClick={() => handleDrugSelect(drug.id)}
+            >
+              {drug.name}
+            </button>
+          </li>
+        ))}
+      </ul>
+    
+    </Box>
+
+  <Box  position="absolute" top={110} right={60} m={2}>
+    
+ 
+    <button className="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+   {t("filter with Category")}
+    </button>
+      <ul className="dropdown-menu">
+    
+      <li>
+     
+        <input type="text"  name='categoryMissed'  onChange={(event)=>handleSearchInputChange(event)}  placeholder="Search by category name..." />
+     
+      
+    </li>
+
+
+
+      {catArr.map((category) => (
+        <li key={category.id}>
+         <button className="dropdown-item" onClick= { ()=>handleCategorySelect(category.id)
+        }>
+           {category.name}</button>
+        </li>
+      ))}
+    </ul>
+  
+
+  </Box>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+    <Box position="absolute" top={150} right={60} m={2}>
+      <FilterListIcon onClick={handleClick} />
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+      >
+        <MenuItem onClick={ ()=>fetchData ({ordering :'name' , search:val,drug:anyDrug,Category:anyCat})}>name ascending</MenuItem>
+        <MenuItem onClick={()=>fetchData ({ordering :'-name', search:val,drug:anyDrug,Category:anyCat})} >name descending</MenuItem>
+        <MenuItem onClick={ ()=>fetchData ({ordering :'price' , search:val,drug:anyDrug,Category:anyCat})}> High Price</MenuItem>
+        <MenuItem onClick={()=>fetchData ({ordering :'-price', search:val,drug:anyDrug,Category:anyCat})} > Low Price</MenuItem>   
+    
+       </Menu>
+    </Box>
 
 
 
@@ -636,58 +729,95 @@ const [editingId, setEditingId] = useState(null);
 
   
 
-  
+<Box   sx={{
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  height: '100vh',
 
-  
+}}>  
 
-  
+<TableContainer component={Paper}
+ sx={{ maxWidth: '90%',maxHeight:"70%" , borderRadius: '10px' }}
+>
+ <Table aria-label='simple table' 
+ stickyHeader
+ >
+ <TableHead>
+      <TableRow>
+      <TableCell style={{ backgroundColor: '#f5f5f5', padding: '4px' }}>
+  <FormGroup>
+    <FormControlLabel
+      control={<Checkbox   />}
+      sx={{ mr: 0, ml: '-12px', transform: 'scale(0.8)' }}
+    />
+  </FormGroup>
+</TableCell>
 
-<table className="table">
+        <TableCell  style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{t("Product ID")}</TableCell>
+        <TableCell   style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{t("Product Name")}</TableCell>
+        <TableCell   style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{t("Product Name(Arabic)")}</TableCell>
+        <TableCell   style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{t("Price")}</TableCell>
+        <TableCell   style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{t("Category Name")}</TableCell>
+        <TableCell   style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{t("Category Name(Arabic)")}</TableCell>
+        <TableCell  style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{t("Category Image")}</TableCell>
+        <TableCell align="center"  style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{t("Drug Name")}</TableCell>
+      </TableRow>
+    </TableHead>
+    
+    <TableBody>
+  {medicines.map((medicine) => (
+    <TableRow key={medicine.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+      <TableCell style={{ padding: '4px' }}>
+        <FormGroup>
+          <FormControlLabel
+            control={<Checkbox    onClick={() => handleSelectMedicineId(medicine.id)} />}
+            sx={{ mr: 0, ml: '-12px', transform: 'scale(0.8)' }}
+          />
+        </FormGroup>
+      </TableCell>
+
+      <TableCell align="center"  style={{ padding: '4px' }}>{medicine.id}</TableCell>
+
+      <TableCell
      
-        <tr>
-          <th>{t("product ID")}</th>
-          <th>{t("product Name")}</th>
-          <th>{t("product Name_ar")}</th>
-          <th>{t("price")}</th>
-          <th>{t("category Name")}</th>
-          <th>{t("category Name(Arabic)")}</th>
-          <th>{t("category image")}</th>
-          <th>{t("drug Name")}</th>
-         
-          <th>{t("select")}</th>
-        </tr>
-     
-      <tbody>
-        {medicines.map((medicine) => (
-          <tr key={medicine.id}>
-            <td style={{ width: "50px" }}>{medicine.id}</td>
-            <td onClick={() => handleEditClick(medicine.id, "name")}>
-              {editingId === medicine.id && editingField === "name" ? (
-                <input
-                  type="text"
-                  defaultValue={medicine.name}
-                  onBlur={(event) =>
-                    handleEditSave(medicine.id, "name", event.target.value)
-                  }
-                />
-              ) : (
-                medicine.name
-              )}
-            </td>
-            <td onClick={() => handleEditClick(medicine.id, "name_ar")}>
-              {editingId === medicine.id && editingField === "name_ar" ? (
-                <input
-                  type="text"
-                  defaultValue={medicine.name_ar}
-                  onBlur={(event) =>
-                    handleEditSave(medicine.id, "name_ar", event.target.value)
-                  }
-                />
-              ) : (
-                medicine.name_ar
-              )}
-            </td>
-            <td onClick={() => handleEditClick(medicine.id, "price")}>
+        style={{ padding: '4px' }}
+        onClick={() => handleEditClick(medicine.id, 'name')}
+      >
+        {editingId === medicine.id && editingField === 'name' ? (
+          <input
+            type="text"
+            defaultValue={medicine.name}
+            onBlur={(event) =>
+              handleEditSave(medicine.id, 'name', event.target.value)
+            }
+          />
+        ) : (
+          medicine.name
+        )}
+      </TableCell>
+
+      <TableCell
+      align="center"
+        style={{ padding: '4px' }}
+        onClick={() => handleEditClick(medicine.id, 'name_ar')}
+      >
+        {editingId === medicine.id && editingField === 'name_ar' ? (
+          <input
+            type="text"
+            defaultValue={medicine.name_ar}
+            onBlur={(event) =>
+              handleEditSave(medicine.id, 'name_ar', event.target.value)
+            }
+          />
+        ) : (
+          medicine.name_ar
+        )}
+      </TableCell>
+      <TableCell 
+        align="center"
+        style={{ padding: '4px' }}
+      onClick={() => handleEditClick(medicine.id, "price")}>
               {editingId === medicine.id && editingField === "price" ? (
                 <input
                   type="number"
@@ -699,12 +829,13 @@ const [editingId, setEditingId] = useState(null);
               ) : (
                 medicine.price
               )}
-            </td>
+            </TableCell>
+
             {medicine.category.length > 0 ? (
               <React.Fragment>
-                <td  >{medicine.category.map((category) => category.name).join(", ")}</td>
-                <td>{medicine.category.map((category) => category.name_ar).join(", ")}</td>
-                <td>
+                <TableCell  >{medicine.category.map((category) => category.name).join(", ")}</TableCell>
+                <TableCell>{medicine.category.map((category) => category.name_ar).join(", ")}</TableCell>
+                <TableCell>
                   {medicine.category.map((category) => (
                     <img
                       src={category.image.image}
@@ -712,58 +843,35 @@ const [editingId, setEditingId] = useState(null);
                       style={{ width: "50px", marginRight: "5px" }}
                     />
                   ))}
-                </td>
+                </TableCell>
               </React.Fragment>
             ) : (
               <React.Fragment>
-                <td>--</td>
-                <td>--</td>
-                <td>--</td>
+                <TableCell>--</TableCell>
+                <TableCell>--</TableCell>
+                <TableCell>--</TableCell>
               </React.Fragment>
             )}
             {medicine.drug.length > 0 ? (
-              <td>
+              <TableCell>
                 {medicine.drug.map((drug) => drug.name).join(", ")}
-              </td>
+              </TableCell>
             ) : (
-              <td>--</td>
+              <TableCell>--</TableCell>
             )}
-            <td>
-              <button
-                className={
-                  selectedMedicineId.ids.indexOf(medicine.id) !== -1
-                    ? "selected"
-                    : "select-btn"
-                }
-                onClick={() => handleSelectMedicineId(medicine.id)}
-              >
-                {t("Select")}
-              </button>
-            </td>
-           {/**  <td>
-              <button
-                className="update-btn"
-                onClick={() => {
-                  handleSetActiveDiv({
-                    id: medicine.id,
-                    name: medicine.name,
-                    name_ar: medicine.name_ar,
-                    category: medicine.category[0].name,
-                    drug: medicine.drug[0].name,
-                    price: medicine.price,
-                    company: medicine.company,
-                    number: 1,
-                  });
-                  window.scrollTo({ top: 0, behavior: "smooth" }); // scroll to the top of the page
-                }}
-              >
-                {t("Update")}
-              </button>
-            </td>*/}
-          </tr>
-        ))}
-      </tbody>
-    </table>
+      
+
+
+
+    </TableRow>
+  ))}
+</TableBody>
+  </Table>
+  </TableContainer>
+</Box>
+
+  
+
 
 
     <div>

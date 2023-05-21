@@ -1,5 +1,33 @@
 import axios, { Axios } from 'axios'
 import React, { useEffect, useMemo, useState } from 'react'
+import 
+{
+  Menu, 
+  MenuItem, 
+  Box,
+  Button,
+  Typography,
+  TableContainer,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  
+} from "@mui/material";
+import FilterListIcon from '@mui/icons-material/FilterList';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import AddIcon from '@mui/icons-material/Add';
+import Paper from '@mui/material/Paper'
+import SearchIcon from '@mui/icons-material/Search';
+import InputBase from '@mui/material/InputBase';
+import Avatar from '@mui/material/Avatar';
+import IconButton from '@mui/material/IconButton';
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
+import avatar from '../../imgs/avatar.jpg'
 import { useTranslation} from "react-i18next";
 import i18next from 'i18next';
 
@@ -10,11 +38,9 @@ import { FaFilter } from './../../../../node_modules/react-icons/fa/index.esm';
 import { FaTrash } from './../../../../node_modules/react-icons/fa/index.esm';
 import { FaSearch } from './../../../../node_modules/react-icons/fa/index.esm';
 import Cookies from 'js-cookie';
-
 import debounce from 'lodash.debounce';
-
-
 import URL from '../URL/URL'
+import New from './../New/New';
 
 
 
@@ -59,6 +85,16 @@ export default function Home({prop}) {
 id:'',
 name:''
   })
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
  
 /// editt
 
@@ -175,6 +211,7 @@ setMedicines(response.data.results);
       const newIds = selectedMedicineId.ids.filter((medId) => medId !== id);
       setSelectedMedicineId({ ids: newIds });
     }
+    console.log('here we are lets do it')
   };
   const handleMedicineNameChange = (e, id) => {
     // Update the medicine object with new name
@@ -303,9 +340,48 @@ useEffect(() => {
 }, [updatedData]);
   return (   
   
+
+
+
+  
     
     <>
+  
+
+<Paper
+      component="form"
+       sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: '100%' }}
+     
+    >
+       <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
+        <SearchIcon />
+      </IconButton>
+      <InputBase
+        sx={{ ml: 1, flex: 1 }}
+        placeholder="Search..."
+        inputProps={{ 'aria-label': 'search...' }}
+        name='search'
+        onChange={debouncedResults}
+      />
+
+        <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
+        < NotificationsNoneIcon/>
+      </IconButton>
+      <Avatar
+      alt="Remy Sharp"
+      src={avatar}
+      sx={{width: 24, height: 24  }}
+/>
+     
+
+     
+    </Paper>
     
+    
+    
+  
+
+
     <div>
 
 
@@ -313,57 +389,10 @@ useEffect(() => {
 
         
         <ul  style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <input
-      placeholder='Search...'
-      name='search'
-      onChange={debouncedResults}
-      style={{ paddingLeft: '2.5rem' }} // Add some left padding to make room for the icon
-    />
+     
    
-    {/**order */}
-    <div className="dropdown">
-      <button className="btn btn-link dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        <FaFilter className='icon'/> {t("ordering")}
-      </button>
-     <ul className="dropdown-menu">
-      
-
-    <li> 
-      
-      <button className="dropdown-item" name='starts_at' onClick={ ()=>fetchData ({ordering :'name' , search:val})} 
-      >
-       name ascending
-       </button>
-       <button className="dropdown-item"  name='ends_at' onClick={()=>fetchData ({ordering :'-name', search:val})} 
-      >
-       name descending
-       </button>
-      
-      </li>
-
-  
-
-  </ul>
- 
-  </div>
-          {/**actions */}
-
-
-          <div>
-  <button onClick={prop} className='    ' >
-      <FaPlus className='icon'/>  {t("create")}
-      </button>  
-       </div>
-      <div> 
-        <button onClick={handleDelete} className='   '>
-      <FaTrash className='icon'/> {t("delete")}
-    </button>
-     </div>
-    <div>
-      <button onClick={handleUpdate} className='   '>
-    <FaEdit className='icon'/> {t("update")}
-    </button> 
-    </div>
+    
+     
 
 
 
@@ -371,7 +400,7 @@ useEffect(() => {
 {/**lang */}
 <div className="dropdown">
       <button className="btn btn-link dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        <FaGlobe className='icon'/>  {t("Language")}
+        <FaGlobe className='icon'/> 
       </button>
      <ul className="dropdown-menu">
        {languages.map(({code,name,country_code}) =>(
@@ -397,20 +426,7 @@ useEffect(() => {
         </ul>
       </nav>
    
-   {/**
-
-   <div style={{ display: activeDiv === 1 ? 'block' : 'none'}}>
-   <label htmlFor='name' className='input-label'>Name</label>
-  <input className='input-field' value={inputdata.name} type='text' onChange={(event) => setInputdata({ ...inputdata, name: event.target.value })} />
-   <button onClick={fillarr}>fill</button>
-  
-
- 
-
-
-   </div>
-      
- */}
+   
 
 
 
@@ -418,7 +434,14 @@ useEffect(() => {
     </div>
      
    
-    
+    <Box sx={{ position: 'relative' }}>
+  <Box position="absolute" top={0} left={60} m={2}>
+    <Typography variant="h5" style={{ fontWeight: 'bold' }}>
+      Drugs
+    </Typography>
+  </Box>
+ 
+</Box>
  
     
 
@@ -426,49 +449,130 @@ useEffect(() => {
   
   
   
- 
+    <Box position="absolute" top={90} right={60} sx={{ display: 'flex' }}>
+      <Box m={2}>
+        <Button onClick={prop} variant="contained" color="primary" startIcon={<AddIcon />}>
+          New Drug
+        </Button>
+      </Box>
+      <Box m={2}>
+        <Button onClick={handleDelete}  variant="contained" color="primary" startIcon={<AddIcon />}>
+          Delete
+        </Button>
+      </Box>
+      <Box m={2}>
+        <Button onClick={handleUpdate} variant="contained" color="primary" startIcon={<AddIcon />}>
+          Update
+        </Button>
+      </Box>
+    </Box>
+  
    
   
-  
+     <Box position="absolute" top={150} right={60} m={2}>
+      <FilterListIcon onClick={handleClick} />
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+      >
+        <MenuItem onClick={ ()=>fetchData ({ordering :'name' , search:val})}>name ascending</MenuItem>
+        <MenuItem onClick={()=>fetchData ({ordering :'-name', search:val})} >name descending</MenuItem>
+       
+      </Menu>
+    </Box>
 
 
-  
-    <table className="table">
-<tr>
-  <th>{t("drug ID")}</th>
-  <th>{t("drug Name")}</th>
-  
-  <th>{t("delete")}</th>
-</tr>
-<tbody> {medicines.map((medicine) => ( <tr key={medicine.id}> 
-  <td style={{ width: "50px" }}>{medicine.id}</td>
+    <Box    sx={{
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  height: '100vh',
 
+}}>
 
-
-  <td onClick={() => handleEditClick(medicine.id, "name")}>
-  {editingId === medicine.id && editingField === "name" ? (
-    <input
-      type="text"
-      defaultValue={medicine.name}
-      onBlur={(event) => handleEditSave(medicine.id, "name", event.target.value)}
+  <TableContainer component={Paper}
+ sx={{ maxWidth: '90%', maxHeight:"70%" ,borderRadius: '10px' }}
+>
+ <Table aria-label='simple table' 
+ stickyHeader
+ >
+ <TableHead>
+      <TableRow>
+      <TableCell style={{ backgroundColor: '#f5f5f5', padding: '4px' }}>
+  <FormGroup>
+    <FormControlLabel
+      control={<Checkbox   />}
+      sx={{ mr: 0, ml: '-12px', transform: 'scale(0.8)' }}
     />
-  ) : (
-    medicine.name
-  )}
-</td>
+  </FormGroup>
+</TableCell>
+       
+        <TableCell  style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{t("drug ID")}</TableCell>
+        <TableCell align="center"  style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{t("drug Name")}</TableCell>
+        
+       
+      </TableRow>
+    </TableHead>
+    
+    <TableBody>
+  {medicines.map((medicine) => (
+    <TableRow key={medicine.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+      <TableCell style={{ padding: '4px' }}>
+        <FormGroup>
+          <FormControlLabel
+            control={<Checkbox    onClick={() => handleSelectMedicineId(medicine.id)} />}
+            sx={{ mr: 0, ml: '-12px', transform: 'scale(0.8)' }}
+          />
+        </FormGroup>
+      </TableCell>
+
+      <TableCell style={{ padding: '4px' }}>{medicine.id}</TableCell>
+
+      <TableCell
+      align="center"
+        style={{ padding: '4px' }}
+        onClick={() => handleEditClick(medicine.id, 'name')}
+      >
+        {editingId === medicine.id && editingField === 'name' ? (
+          <input
+            type="text"
+            defaultValue={medicine.name}
+            onBlur={(event) =>
+              handleEditSave(medicine.id, 'name', event.target.value)
+            }
+          />
+        ) : (
+          medicine.name
+        )}
+      </TableCell>
+
+    </TableRow>
+  ))}
+</TableBody>
+  </Table>
+  </TableContainer>
+</Box>
 
 
 
 
- {/*<td> <button className="update-btn" onClick={() => { handleSetActiveDiv({id: medicine.id, name: medicine.name, number: 1 }); window.scrollTo({ top: 0, behavior: 'smooth' });  }}> 
-{t("Update")}
- </button> 
-  </td> */}
-<td>
-   <button className={selectedMedicineId.ids.indexOf(medicine.id) !== -1 ? 'selected' : 'select-btn'} onClick={() => handleSelectMedicineId(medicine.id)}>{t("Select")}</button> </td> 
-</tr> ))}
- </tbody>
-  </table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     <ReactPaginate 

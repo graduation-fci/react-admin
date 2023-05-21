@@ -9,6 +9,8 @@ import Admin from '../Admin/Admin';
 import Medicine from './../Medicine/Medicine';
 import Category from './../Category/Category';
 import New from './../New/New';
+import Dash from '../Dash/Dash';
+import OrderDetails from './../OrderDetails/OrderDetails';
 
 
 
@@ -35,6 +37,8 @@ export default function App() {
       <Route path='/medicine' element={<Medicine/>}/>
       <Route path='/category' element={<Category/>}/>
       <Route path='/new' element={<New/>}/>
+      <Route path='/dash' element={<Dash/>}/>
+      <Route path='/orderdetails' element={<OrderDetails/>}/>
      
       </Routes>
       

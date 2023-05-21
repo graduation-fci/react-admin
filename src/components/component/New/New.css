@@ -40,7 +40,8 @@
   
   .content {
     flex: 1;
-    padding: 20px;
+    margin-top: 0;
+  
   }
   
   .sidebar-header {
@@ -128,9 +129,7 @@
       margin-bottom: 20px;
     }
   
-    .content {
-      padding: 10px;
-    }
+  
   }
   
   /* Mobile layout */
@@ -139,3 +138,4 @@
       width: 100%;
     }
   }
+  

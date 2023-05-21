@@ -2,13 +2,46 @@ import axios from 'axios';
 import React,{useState , useEffect} from 'react'
 import { FaWindowClose } from 'react-icons/fa/index.esm';
 import { FaEdit } from 'react-icons/fa/index.esm';
+import 
+{
+  Menu, 
+  MenuItem, 
+  Box,
+  Button,
+  Typography,
+  TableContainer,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  
+} from "@mui/material";
+import FilterListIcon from '@mui/icons-material/FilterList';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import AddIcon from '@mui/icons-material/Add';
+import Paper from '@mui/material/Paper'
+import SearchIcon from '@mui/icons-material/Search';
+import InputBase from '@mui/material/InputBase';
+import Avatar from '@mui/material/Avatar';
+import IconButton from '@mui/material/IconButton';
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
+import ClearIcon from '@mui/icons-material/Clear';
+import EditNoteIcon from '@mui/icons-material/EditNote';
+
+
+import TextField from '@mui/material/TextField';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencilAlt  } from '@fortawesome/free-solid-svg-icons';
 import {storage} from '../FireBase'
 import {ref , uploadBytes , getDownloadURL } from 'firebase/storage'
-import {v4} from 'uuid'
+
 import URL from './../URL/URL';
+
 
 const Products = () => {
     const [inputarr,setInputarr]= useState([]);
@@ -41,7 +74,17 @@ const Products = () => {
  const [cat,setCat]=useState([]);
  
  const [drug,setDrug]=useState([]);
-   
+ 
+ const [anchorEl, setAnchorEl] = useState(null);
+ 
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };  
 
     ////// image to firebase
    {/* function uploadImage() {
@@ -250,23 +293,34 @@ function handleDrugChange(drugs) {
     <>
 
 
-  <div>
     
-    <div className='Medicine'>
-    
-      <input type="text" autoComplete='off' name='name' value={inputdata.name} onChange={handleChange} placeholder='Enter The Name ' />
-      <input type="text" autoComplete='off' name='name_ar' value={inputdata.name_ar} onChange={handleChange} placeholder='Enter The name_ar ' />
-      <input type="text" autoComplete='off' name='inventory' value={inputdata.inventory} onChange={handleChange} placeholder='Enter The inventory ' pattern="[0-9]*" />
+ 
+<Box sx={{
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  height:'100vh',
+  marginTop:'50px'
+  
+}}>
+      <TextField   style={{ marginBottom: '16px' }} id="outlined-basic" label="Product Name" variant="outlined"  name='name' value={inputdata.name} onChange={handleChange}  />
+      <TextField   style={{ marginBottom: '16px' }} id="outlined-basic" label="Product Name(Arabic)" variant="outlined"  name='name_ar' value={inputdata.name_ar} onChange={handleChange} />
+      <TextField   style={{ marginBottom: '16px' }} id="outlined-basic" label="Product Inventory" variant="outlined"  name='inventory' value={inputdata.inventory} onChange={handleChange}  pattern="[0-9]*" />
      
     
-      <input type="text" autoComplete='off' name='price' value={inputdata.price} onChange={handleChange} placeholder='Enter The price ' />
+      <TextField   style={{ marginBottom: '16px' }} id="outlined-basic" label="Product Price" variant="outlined"  name='price' value={inputdata.price} onChange={handleChange}  />
       
-      <input type="text" autoComplete='off' name='company' value={inputdata.company} onChange={handleChange} placeholder='Enter The company ' />
-      <input type="text" autoComplete='off' name='parcode' value={inputdata.parcode} onChange={handleChange} placeholder=' The parcode ' />
+      <TextField   style={{ marginBottom: '16px' }} id="outlined-basic" label=" Product Company" variant="outlined"  name='company' value={inputdata.company} onChange={handleChange}  />
+      <TextField   style={{ marginBottom: '16px' }} id="outlined-basic" label="Product Parcode" variant="outlined"  name='parcode' value={inputdata.parcode} onChange={handleChange}  />
       <div>
-      <label htmlFor="image-input">Choose an image:</label>
-      <input type="file" onChange={(e) => setImageFiles(e.target.files)} multiple />
-      <button onClick={handleUpload} >upload</button>
+      
+      <input type="file"   style={{ marginBottom: '16px' }}  onChange={(e) => setImageFiles(e.target.files)} multiple />
+      <Box m={2}>
+    <Button     style={{ marginBottom: '16px' }} variant="contained" color="primary"  onClick={handleUpload}>
+       Upload
+    </Button>
+  </Box>
     </div>
      <div className="dropdown">
       <button
@@ -298,6 +352,14 @@ function handleDrugChange(drugs) {
       </ul>
       <p>Selected categories: {inputdataArr.category}</p>
     </div>
+
+
+    
+      
+
+
+
+
 
       
 {/**drugssss */}
@@ -333,86 +395,129 @@ function handleDrugChange(drugs) {
       <p>Selected drugs: {inputdataArr.drug}</p>
     </div>
 
+    <Box m={2}>
+    <Button variant="contained" color="primary" startIcon={<AddIcon />} onClick={() => {
+  fillarr();
+  window.scrollBy(0, 500);
+}}> 
+      Add Product
+    </Button>
+  </Box>
 
-
-
-    <button onClick={fillarr}>add</button>
-     
-
-   </div>
-
-
-   
-    
-  
-    <div className='Med'>
- 
-<table border={1} cellPadding={10} width={30}>
- <tbody>
- <tr>
-    <th>name</th>
-    <th>name_ar</th>
-    <th>category</th>
-    <th>price</th>
-    <th>drug</th>
-    <th>company</th>
-    <th>parcode</th>
-    <th> image_files</th>
-    <th>delete</th>
-    <th>update</th>
- </tr>
-   
-
-  
-
- 
+</Box>
 
    
-    {
-      inputarr.map
-       ((info,index)=>{
-        return(
-          <tr key={index}>
-           <td>{info.name}    
-             </td> 
-             <td>{info.name_ar}</td>
-             <td>{info.category}</td>
-             <td>{info.price}</td>
-             <td>{info.drug}</td>
-             <td>{info.company}</td>
-             <td>{info.parcode}</td>
-             <td>{info.image_files}</td>
-             <td><FaWindowClose  className='icon' onClick={()=>{deleteRow(index)}} style={{ color: 'red'}}/> </td>
-             <td>
-             <FaEdit className='icon' onClick={() => handleEdit(index)}/></td>
-            
-            </tr>
-          
-        )
-       }
+   <Box   sx={{
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  height: '70vh',
+  marginTop:"10px"
+
+}}>
+
+
+
+<TableContainer component={Paper}
+ sx={{ maxWidth: '90%',maxHeight:"70%" , borderRadius: '10px' }}
+>
+ <Table aria-label='simple table' 
+ stickyHeader
+ >
+ <TableHead>
+      <TableRow>
       
-      
-         
-    )}
+       
+        <TableCell  style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{("Product Name")}</TableCell>
+        <TableCell  style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{("Product Name(Arabic)")}</TableCell>
+        <TableCell  style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{("Product Inventory")}</TableCell>
+        <TableCell  style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{("Product Price")}</TableCell>
+        <TableCell  style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{("Product Company")}</TableCell>
+        <TableCell  style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{("Product Parcode")}</TableCell>
+        <TableCell  style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{("Product Category")}</TableCell>
+        <TableCell  style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{("Product Drug")}</TableCell>
+        <TableCell  style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{("Product Image")}</TableCell>
+        <TableCell style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>
+          {("update")}
+        </TableCell>
+        <TableCell style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>
+          {("delete")}
+        </TableCell>
+     
+       
+      </TableRow>
+    </TableHead>
+    
+    <TableBody>
+  {inputarr.map((info,index) => (
+    <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+      <TableCell  style={{ padding: '4px' }}>{info.name}</TableCell>
+      <TableCell  style={{ padding: '4px' }}>{info.name_ar}</TableCell>
+      <TableCell  style={{ padding: '4px' }}>{info.inventory}</TableCell>
+      <TableCell  style={{ padding: '4px' }}>{info.price}</TableCell>
+      <TableCell  style={{ padding: '4px' }}>{info.company}</TableCell>
+      <TableCell  style={{ padding: '4px' }}>{info.parcode}</TableCell>
+      <TableCell  style={{ padding: '4px' }}>{info.category}</TableCell>
+      <TableCell  style={{ padding: '4px' }}>{info.drug}</TableCell>
+      <TableCell  style={{ padding: '4px' }}>{info.image_files}</TableCell>
+
+
+      <TableCell>
+         <IconButton type="button" sx={{ p: '10px' }} onClick={()=>{deleteRow(index)}}>
+        <ClearIcon />
+      </IconButton>
+      </TableCell>
+
    
+      <TableCell>
+         <IconButton type="button" sx={{ p: '10px' }} onClick={() => handleEdit(index)} >
+        <EditNoteIcon />
+      </IconButton>
+      </TableCell>
+       
+
+
+
+    </TableRow>
+    
+    )
   
- </tbody>
-   
-    </table>
+ 
+ 
+    
+)}
+
+  
+</TableBody>
+  </Table>
+
+  </TableContainer>
+  <Box m={2}>
+        <Button onClick={medicineSubmit} variant="contained" color="primary">
+          send
+        </Button>
+      </Box>
+</Box>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
     
      
-   <button onClick={medicineSubmit}>send</button>
-   <div className="card">
-      <div className="card-body">
-        <h4 className="card-title">Results</h4>
-        <p className="card-text">Success count: {resp}</p>
-        <p className="card-text">Fail count: {fail}</p>
-      </div>
-    </div>
-   
-   </div>
-   </div>
+ 
 
+ 
     
     
   
