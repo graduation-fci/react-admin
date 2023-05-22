@@ -110,7 +110,7 @@ async function formSubmit(e){
    {
     const response= await axios.post("http://localhost:8000/auth/users/", user);
     if(response.status==200){
-      navigate('/login')
+      navigate('/#/login')
     }
     else{
     //setError(response.data.message)
@@ -262,7 +262,7 @@ useEffect( ()=>{
 
  
          <Typography   variant="h6" style={{width:'100%',textAlign:'center',justifyContent:'center'}}   >
-           {t("Don't hava an account?")} <Link href="/login" underline="none">
+           {t("Don't hava an account?")} <Link href="/#/login" underline="none">
          {t("sign in")} 
           </Link>  
           </Typography>

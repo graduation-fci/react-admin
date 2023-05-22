@@ -2,7 +2,7 @@ import React  from 'react';
 import ReactDOM from 'react-dom/client';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, HashRouter } from 'react-router-dom';
 import i18n from "i18next";
 import LanguageDetector from 'i18next-browser-languagedetector';
 import {  initReactI18next } from "react-i18next";
@@ -34,9 +34,9 @@ const loadinMarkup=(
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
  <Suspense fallback={loadinMarkup}>
- <BrowserRouter>
-<App/>
- </BrowserRouter>
+ <HashRouter basename={process.env.PUBLIC_URL}>
+    <App/>
+ </HashRouter>
  </Suspense>
 );
 
