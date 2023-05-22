@@ -110,7 +110,7 @@ async function formSubmit(e){
    {
     const response= await axios.post("http://localhost:8000/auth/users/", user);
     if(response.status==200){
-      navigate('/#/login')
+      navigate('/login')
     }
     else{
     //setError(response.data.message)

@@ -81,7 +81,7 @@ export default function Login() {
       localStorage.setItem('userToken',response.data.access)
       localStorage.setItem('refreshToken',response.data.refresh)
       if(response.status===200){
-        navigate('/#/new')
+        navigate('/new')
         console.log(response);
 
 
