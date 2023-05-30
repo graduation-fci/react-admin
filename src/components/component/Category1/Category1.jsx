@@ -276,7 +276,7 @@ function fillarr(){
   let token = localStorage.getItem("userToken");
 
   try {
-    const response = await fetch(apiUrl + "medicine/drugs/bulk_patch/", {
+    const response = await fetch(apiUrl + "medicine/categories/bulk_patch/", {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

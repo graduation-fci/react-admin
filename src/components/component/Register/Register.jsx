@@ -51,6 +51,8 @@ import { FaGlobe } from './../../../../node_modules/react-icons/fa/index.esm';
 import Cookies from 'js-cookie';
 import log from '../../imgs/log.jpg';
 import Login from './../Login/Login';
+import URL from '../URL/URL';
+  
 const languages=[
   {
     code:'en',
@@ -108,7 +110,7 @@ async function formSubmit(e){
    }
    else
    {
-    const response= await axios.post("http://localhost:8000/auth/users/", user);
+    const response= await axios.post(URL+"auth/users/", user);
     if(response.status==200){
       navigate('/login')
     }

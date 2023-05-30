@@ -482,7 +482,7 @@ const [editingId, setEditingId] = useState(null);
 
 
 {/*price filter */}
-<Box position="absolute" top={110} right={400} m={2}>
+<Box position="absolute" top={110} right={420} m={2}>
 <div className="">
       <button className="btn btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
         {t("filter Price")}

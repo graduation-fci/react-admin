@@ -28,6 +28,8 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { FaGlobe } from './../../../../node_modules/react-icons/fa/index.esm';
 import Cookies from 'js-cookie';
 import log from '../../imgs/log.jpg';
+import URL from '../URL/URL';
+
 const languages=[
   {
     code:'en',
@@ -77,7 +79,7 @@ export default function Login() {
     }
     else
     {
-      let response= await axios.post("http://64.225.110.140:8000/auth/jwt/create", user);
+      let response= await axios.post(URL+"auth/jwt/create", user);
       localStorage.setItem('userToken',response.data.access)
       localStorage.setItem('refreshToken',response.data.refresh)
       if(response.status===200){

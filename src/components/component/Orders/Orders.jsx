@@ -415,7 +415,7 @@ function handleDetails(id) {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem onClick={ ()=>fetchData ({order_status :'CAN' , search:val})}>orders Confirmed</MenuItem>
+        <MenuItem onClick={ ()=>fetchData ({order_status :'CON' , search:val})}>orders Confirmed</MenuItem>
         <MenuItem onClick={()=>fetchData ({order_staus :'COM', search:val})} >orders Completed</MenuItem>
         <MenuItem onClick={ ()=>fetchData ({order_status :'PEN' , search:val})}>orders Pending</MenuItem>
         <MenuItem onClick={()=>fetchData ({order_status :'CAN', search:val})} >orders Canceled</MenuItem>  
