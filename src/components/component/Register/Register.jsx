@@ -264,7 +264,7 @@ useEffect( ()=>{
 
  
          <Typography   variant="h6" style={{width:'100%',textAlign:'center',justifyContent:'center'}}   >
-           {t("Don't hava an account?")} <Link href="/login" underline="none">
+           {t("Don't hava an account?")} <Link href="/#/login" underline="none">
          {t("sign in")} 
           </Link>  
           </Typography>

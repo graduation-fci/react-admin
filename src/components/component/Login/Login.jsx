@@ -209,7 +209,7 @@ function getError(fieldName) {
     </div>
   </div> 
   <Box display="flex" justifyContent="flex-end"  marginTop="-1.5rem">
-  <Typography variant="p"> <Link href="/reset" underline="none">
+  <Typography variant="p"> <Link href="/#/reset" underline="none">
          Forget Password?
         </Link></Typography>
       </Box>
@@ -220,7 +220,7 @@ function getError(fieldName) {
         
         
           <Typography   variant="h6" style={{width:'100%',textAlign:'center',justifyContent:'center'}}   >
-           {t("Don't hava an account?")} <Link href="/register" underline="none">
+           {t("Don't hava an account?")} <Link href="/#/register" underline="none">
          {t("sign up")} 
           </Link>  
           </Typography>

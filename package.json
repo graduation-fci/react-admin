@@ -1,5 +1,6 @@
 {
   "name": "tester",
+  "homepage": "#",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -49,8 +50,11 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "predeploy": "npm run build && npm run add-domain",
+    "add-domain": "echo \"totalcare.theta.com.co\" > build/CNAME",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && cp build/index.html build/404.html",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -73,6 +77,7 @@
     ]
   },
   "devDependencies": {
+    "gh-pages": "^5.0.0",
     "stream-http": "^3.2.0"
   }
 }
