@@ -56,6 +56,7 @@ export default function Login() {
   
  let[errorList,setErrorList]=useState([]);
  let[error,setError]=useState('');
+ let [message,setMessage]=("")
  let navigate = useNavigate()
  let [user,setUser]=useState({
   username:'',password:''});
@@ -67,43 +68,53 @@ export default function Login() {
     console.log(myUser);
    
   }
-  async function formSubmit(e){
+  async function formSubmit(e) {
     e.preventDefault();
-   
-   
-
-    let validationResponse =  validateRegisterForm();
-    console.log(validationResponse)
-    if(validationResponse.error){
-     setErrorList(validationResponse.error.details)
+  
+    let validationResponse = validateRegisterForm();
+    console.log(validationResponse);
+  
+    if (validationResponse.error) {
+      setErrorList(validationResponse.error.details);
+      return;
     }
-    else
-    {
-      let response= await axios.post(URL+"auth/jwt/create", user);
-      localStorage.setItem('userToken',response.data.access)
-      localStorage.setItem('refreshToken',response.data.refresh)
-      if(response.status===200){
-        navigate('/new')
+  
+    try {
+      let response = await axios.post(URL + 'auth/jwt/create', user);
+      localStorage.setItem('userToken', response.data.access);
+      localStorage.setItem('refreshToken', response.data.refresh);
+    
+      if (response.status === 200) {
+        navigate('/new');
         console.log(response);
-
-
+      } else {
+        console.log('Error:', response.data.detail);
+        // or display the error message in a UI element
+      }
+    } catch (error) {
+      console.log('Error:', error);
+      console.log('Error response:', error.response.data.detail);
+      setErrorList([]);
+      alert(error.response.data.detail);
+      setMessage(error.response.data.detail)
+      // or display the error message in a UI element above the inputs
     }
      
-  
-}}
- 
-
+    
+      if (error.response && error.response.data && error.response.data.detail) {
+        console.log('Error:', error.response.data.detail);
+        // or display the error message in a UI element
+      } else {
+        console.log('An error occurred. Please try again later.');
+        // or display a generic error message in a UI element
+      }
+    }
 
 function validateRegisterForm(){
   const schema = Joi.object({
-    username: Joi.string().min(3).max(30).required(), 
+    username: Joi.string().required(), 
     password: Joi.string()
-    .pattern(new RegExp('^[A-Z]+[a-z]+[a-zA-Z0-9]*$'))
-    .required()
-    .messages({
-      'string.pattern.base':
-        'Password incorrect',
-    }),
+    .required(),
   
  
   
@@ -157,6 +168,10 @@ function getError(fieldName) {
         <h5>{t("Welcome back! please enter your details.")}</h5>
         <br/>
        
+      
+      
+ 
+ 
     
       
         <Box sx={{ display: 'flex',
@@ -176,7 +191,7 @@ function getError(fieldName) {
           placeholder={t('Enter Your Username')}   
           name='username'
           error={Boolean(getError('username'))}
-      helperText={getError('username')}
+           helperText={getError('username')}
           
           />
         
