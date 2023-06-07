@@ -66,7 +66,7 @@ const OrderDetails = () => {
       <TableCell  align="center"  style={{ padding: '4px' }}>{med.product.name_ar}</TableCell>
       <TableCell align="center"  style={{ padding: '4px' }}>
       <img
-        src={med.product.medicine_images}
+        src={med.product.images}
           style={{ width: "50px", marginRight: "5px" }}
       />
    

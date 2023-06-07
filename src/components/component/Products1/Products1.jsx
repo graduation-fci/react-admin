@@ -120,7 +120,7 @@ export default function Products1({prop}) {
     setAnchorEl(null);
   };
  
-   
+ const[count,setCount]=useState()  
      async function getMedicine(){
       let token= localStorage.getItem("userToken")
       let response= await axios.get(apiUrl+'medicine/products/',{
@@ -129,10 +129,8 @@ export default function Products1({prop}) {
      }}) 
    
      setMedicines(response.data.results);
-     
-    console.log(response.data.results[0]);
-     console.log(medicines)
-     
+     setCount(response.data.count/10)
+   
 
 } 
 
@@ -880,7 +878,7 @@ const [editingId, setEditingId] = useState(null);
      previousLabel={'previous'} 
      nextLabel={'next'}
      breakLabel={'...'}
-     pageCount={2}
+     pageCount={count}
      onPageChange={handlePageClick}
      containerClassName={'pagination justify-content-center'}
      pageClassName={'page-item'}

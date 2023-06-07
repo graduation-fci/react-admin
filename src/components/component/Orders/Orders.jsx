@@ -117,7 +117,7 @@ const [anchorEl, setAnchorEl] = useState(null);
       setSelectedOrder(orderId);
     }}
 
- 
+ const[count,setCount]=useState()
    
      async function getMedicine(){
       let token= localStorage.getItem("userToken")
@@ -127,7 +127,7 @@ const [anchorEl, setAnchorEl] = useState(null);
         }})   
    
      setMedicines(response.data.results);
-     
+     setCount(response.data.count/10)
     
      console.log(response.data)
      
@@ -585,7 +585,7 @@ handleEditSave(medicine.id, 'order_staus', event.target.value)
      previousLabel={'previous'} 
      nextLabel={'next'}
      breakLabel={'...'}
-     pageCount={2}
+     pageCount={count}
      onPageChange={handlePageClick}
      containerClassName={'pagination justify-content-center'}
      pageClassName={'page-item'}

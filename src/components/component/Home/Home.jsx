@@ -1,5 +1,6 @@
 import axios, { Axios } from 'axios'
 import React, { useEffect, useMemo, useState } from 'react'
+
 import 
 {
   Menu, 
@@ -41,7 +42,7 @@ import Cookies from 'js-cookie';
 import debounce from 'lodash.debounce';
 import URL from '../URL/URL'
 import New from './../New/New';
-
+import Medicine from '../Medicine/Medicine';
 
 
 const languages=[
@@ -61,14 +62,14 @@ const languages=[
 
 
 export default function Home({prop}) {
- 
- 
+
   const currentLanguageCode=Cookies.get('i18next') || 'en'
   const currentLanguage=languages.find((l)=>l.code ===currentLanguageCode)
   const { t }=useTranslation()
   const[medicines,setMedicines]=useState([]);
   const [val,setVal]=useState('')
   let apiUrl=URL;
+  
   
   let [selectedMedicineId, setSelectedMedicineId] = useState({"ids":[]});
   let [selectedMedicine,setSelectedMedicine]=useState([{
@@ -105,23 +106,20 @@ console.log(id)
   
 }
 let [updateMedicine,setUpdatemedicine]=useState([])
+let [count, setCount] = useState(0);
  
    
-     async function getMedicine(){
-      let token= localStorage.getItem("userToken")
-      let response= await axios.get(apiUrl+'medicine/drugs/',{
-        headers:{
-          Authorization: 'JWT ' + token
-        }})   
-   
-     setMedicines(response.data.results);
-     
-    
-     console.log(medicines)
-     
-
-} 
-
+    async function getMedicine() {
+   let token = localStorage.getItem("userToken");
+   let response = await axios.get(URL + 'medicine/drugs/', {
+     headers: {
+       Authorization: 'JWT ' + token
+     }
+   });
+   setCount(response.data.count / 10);
+   setMedicines(response.data.results);
+ 
+ }
 
   
  useEffect(()=> {getMedicine();
@@ -338,6 +336,7 @@ const handleEditSave = (id, field, value) => {
 useEffect(() => {
   console.log(updatedData);
 }, [updatedData]);
+
   return (   
   
 
@@ -579,7 +578,7 @@ useEffect(() => {
      previousLabel={'previous'} 
      nextLabel={'next'}
      breakLabel={'...'}
-     pageCount={2}
+     pageCount={count}
      onPageChange={handlePageClick}
      containerClassName={'pagination justify-content-center'}
      pageClassName={'page-item'}
@@ -594,11 +593,11 @@ useEffect(() => {
      
      /> 
 
-
+   
  </>
 
   
 
-    
+   
   )
 };

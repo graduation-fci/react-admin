@@ -105,7 +105,7 @@ export default function Category1({prop}) {
 
   
  
- 
+ const [count,setCount]=useState()
    
      async function getMedicine(){
       let token= localStorage.getItem("userToken")
@@ -115,9 +115,10 @@ export default function Category1({prop}) {
      }})
 
      setMedicines(response.data.results);
+     setCount(response.data.count/10)
      
     
-     console.log(medicines)
+ 
      
 
 } 
@@ -586,7 +587,7 @@ return (
      previousLabel={'previous'} 
      nextLabel={'next'}
      breakLabel={'...'}
-     pageCount={2}
+     pageCount={count}
      onPageChange={handlePageClick}
      containerClassName={'pagination justify-content-center'}
      pageClassName={'page-item'}

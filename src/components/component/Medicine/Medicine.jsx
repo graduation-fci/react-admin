@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React,{useState} from 'react'
 
+
 import 
 {
   
@@ -30,7 +31,7 @@ import './Medicine.css'
 
 import URL from '../URL/URL';
 
-const Medicine = () => {
+function Medicine () {
     const [inputarr,setInputarr]= useState([]);
 
  const [inputdata,setInputdata]= useState({
@@ -82,7 +83,7 @@ const Medicine = () => {
   setEditIndex(i)
   deleteRow(i)
 }
- 
+
 
 async function medicineSubmit(e) {
   e.preventDefault();
@@ -91,8 +92,10 @@ async function medicineSubmit(e) {
     headers: { Authorization: `JWT ${token}` }
   };
   const response = await axios.post(apiUrl + 'medicine/drugs/bulk_create/', inputarr, config);
+ 
   if (response.data.success != 0) {
     setResp(response.data.success_count);
+   
     setFail(0);
   } else {
     setFail(response.data.fail_count);
@@ -100,10 +103,10 @@ async function medicineSubmit(e) {
   }
   console.log(response);
   setInputarr([]);
-}
+} 
     
      return (
-
+ 
     <>
 
 <Box   sx={{ display: 'flex',
@@ -117,6 +120,7 @@ async function medicineSubmit(e) {
           add Drug
         </Button>
       </Box>
+     
      
       </Box>
 

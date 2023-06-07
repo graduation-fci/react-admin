@@ -28,6 +28,7 @@ import { CssBaseline,AppBar,Toolbar,List,Typography,Divider,
   ListItem,ListItemButton,ListItemIcon,ListItemText,
   InboxIcon,MailIcon,Drawer, 
 } from '@mui/material';
+import { Dashboard } from '@mui/icons-material';
 
 
 
@@ -41,9 +42,12 @@ const New = () => {
     setActiveDiv(divNumber);
   };
 
-
-
-
+  function handleClick(name) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('', name);
+    window.history.replaceState({}, '', url);
+   
+  }
 
   return ( 
     
@@ -59,42 +63,44 @@ const New = () => {
       </div>
       <ul className="sidebar-menu">
         <li>
-          <button onClick={() => handleSetActiveDiv(1)} style={{ padding: '0.5rem' }}>
+          <button onClick={() =>{ handleSetActiveDiv(1);handleClick('drugs');}} style={{ padding: '0.5rem' }}>
             <FaCapsules style={{ marginRight: '0.5rem' }} />
-          Drugs
+             Drugs
           </button>
         </li>
         <li>
-          <button onClick={() => {
-                handleSetActiveDiv(2) }} style={{ padding: '0.5rem' }}>
-            <FaList style={{ marginRight: '0.5rem' }} />
-            Categories
-          </button>
+        <button onClick={() => {
+  handleSetActiveDiv(2);
+  handleClick('catregories')
+}} style={{ padding: '0.5rem' }}>
+  <FaList style={{ marginRight: '0.5rem' }} />
+  Categories
+</button>
         </li>
         <li>
-          <button onClick={() => handleSetActiveDiv(5)} style={{ padding: '0.5rem' }}>
+          <button onClick={() => {handleSetActiveDiv(5);handleClick('products')}} style={{ padding: '0.5rem' }}>
             <UilPackage style={{ marginRight: '0.5rem' }} />
             Products
           </button>
         </li>
         <li>
-          <button onClick={() => handleSetActiveDiv(7)} style={{ padding: '0.5rem' }}>
+          <button onClick={() => {handleSetActiveDiv(7);handleClick('orders')}} style={{ padding: '0.5rem' }}>
             <UilShoppingCartAlt style={{ marginRight: '0.5rem' }} />
             Orders
           </button>
         </li>
         <li>
-          <button style={{ padding: '0.5rem' }}>
+          <button onClick={() =>handleClick('dashBoard')} style={{ padding: '0.5rem' }}>
             <UilEstate style={{ marginRight: '0.5rem' }} />
             Dashboard
-          </button>
+          </button>  
         </li>
         <li>
-          <button style={{ padding: '0.5rem' }}>
+          <button  onClick={() =>handleClick('customers')} style={{ padding: '0.5rem' }}>
             <UilUsersAlt style={{ marginRight: '0.5rem' }} />
             Customers
           </button>
-        </li>
+        </li>  
         <li>
           <button style={{ padding: '0.5rem' }}>
             <UilSignOutAlt style={{ marginRight: '0.5rem' }} />
