@@ -29,6 +29,7 @@ import { CssBaseline,AppBar,Toolbar,List,Typography,Divider,
   InboxIcon,MailIcon,Drawer, 
 } from '@mui/material';
 import { Dashboard } from '@mui/icons-material';
+import { useEffect } from 'react';
 
 
 
@@ -48,6 +49,27 @@ const New = () => {
     window.history.replaceState({}, '', url);
    
   }
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const activeDivName = params.get('');
+    switch (activeDivName) {
+      case 'drugs':
+        setActiveDiv(1);
+        break;
+      case 'categories':
+        setActiveDiv(2);
+        break;
+      case 'products':
+        setActiveDiv(5);
+        break;
+      case 'orders':
+        setActiveDiv(7);
+        break;
+      default:
+        setActiveDiv(0);
+    }
+  }, []);
 
   return ( 
     
@@ -71,7 +93,7 @@ const New = () => {
         <li>
         <button onClick={() => {
   handleSetActiveDiv(2);
-  handleClick('catregories')
+  handleClick('categories')
 }} style={{ padding: '0.5rem' }}>
   <FaList style={{ marginRight: '0.5rem' }} />
   Categories
