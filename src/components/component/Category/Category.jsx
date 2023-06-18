@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React,{useState} from 'react'
-
+import Swal from 'sweetalert2';
+import { getMedicine } from '../GetCategory/GetCategory';
 import 
 {
   Box,
@@ -165,9 +166,20 @@ const Category = () => {
         });
       
         if (response.data.success != 0) {
+          getMedicine()
+          Swal.fire(
+            'Good job!',
+            'cateory created successfuly!',
+            'success'
+          )
           setResp(response.data.success_count);
           setFail(0);
         } else {
+          Swal.fire(
+            'sorry!',
+            'failed to create category!',
+            'error'
+          )
           setFail(response.data.fail_count);
           setResp(0);
         }

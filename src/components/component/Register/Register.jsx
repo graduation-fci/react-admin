@@ -238,7 +238,9 @@ useEffect( ()=>{
             height: '50px' // Set to your preferred height
           }
         }} style={{ marginBottom: '16px', width: '100%'}}
-        onChange={getUser} type='password' placeholder={t('password')}   name='password'
+        onChange={getUser} type='password' 
+         placeholder= {t('Enter Your Password')}   
+         name='password'
         error={Boolean(getError('password'))}
           helperText={getError('password')}
         />
@@ -258,14 +260,14 @@ useEffect( ()=>{
 
 
 <Box  m={2} >
-        <Button type='submit' variant="contained" color="primary" style={{width:'100%'}} >{t("Sign up")}</Button>
+        <Button type='submit' variant="contained" color="primary" style={{width:'100%'}} >{t("sign up")}</Button>
          </Box>
 
 
  
          <Typography   variant="h6" style={{width:'100%',textAlign:'center',justifyContent:'center'}}   >
            {t("Don't hava an account?")} <Link href="/#/login" underline="none">
-         {t("sign in")} 
+         {t("Sign in")} 
           </Link>  
           </Typography>
 </form>

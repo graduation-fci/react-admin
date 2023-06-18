@@ -2,6 +2,7 @@ import axios from 'axios';
 
 import Joi from 'joi';
 import React , {useEffect} from 'react'
+import Swal from 'sweetalert2';
 
 
 import 
@@ -95,8 +96,14 @@ export default function Login() {
       console.log('Error:', error);
       console.log('Error response:', error.response.data.detail);
       setErrorList([]);
-      alert(error.response.data.detail);
-      setMessage(error.response.data.detail)
+      Swal.fire(
+        'Sorry!',
+        'No account found with these details',
+        'error'
+      );
+   
+      // alert(error.response.data.detail);
+      // setMessage(error.response.data.detail)
       // or display the error message in a UI element above the inputs
     }
      
@@ -109,6 +116,10 @@ export default function Login() {
         // or display a generic error message in a UI element
       }
     }
+    
+
+    
+
 
 function validateRegisterForm(){
   const schema = Joi.object({
@@ -188,7 +199,7 @@ function getError(fieldName) {
               height: '50px' // Set to your preferred height
             }
           }} style={{ marginBottom: '16px', width: '100%'}}  autoFocus onChange={getUser} type='text' 
-          placeholder={t('Enter Your Username')}   
+          placeholder={t('Enter Your username')} 
           name='username'
           error={Boolean(getError('username'))}
            helperText={getError('username')}
@@ -207,7 +218,8 @@ function getError(fieldName) {
             height: '50px' // Set to your preferred height
           }
         }} onChange={getUser} 
-        type='password' placeholder= {t('Enter The Password')} 
+        type='password'  
+        placeholder= {t('Enter Your Password')} 
           name='password'
           error={Boolean(getError('password'))}
           helperText={getError('password')}
@@ -215,17 +227,17 @@ function getError(fieldName) {
          
        </Box>
       
-        <div className="form-group">
+       {/* <div className="form-group">
     <div className="form-check">
     <label className="form-check-label" htmlFor="gridCheck">
          <Typography  variant="p" > Remember me</Typography>
       </label>
       <input className="form-check-input" type="checkbox" id="gridCheck"/>
     </div>
-  </div> 
-  <Box display="flex" justifyContent="flex-end"  marginTop="-1.5rem">
+      </div> */}
+  <Box display="flex" justifyContent="flex-start"  marginTop="-0.5rem">
   <Typography variant="p"> <Link href="/#/reset" underline="none">
-         Forget Password?
+        {t('Forget Password?')}
         </Link></Typography>
       </Box>
   <br/>

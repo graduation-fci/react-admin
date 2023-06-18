@@ -1,6 +1,7 @@
 import axios, { Axios } from 'axios'
 import React, { useEffect, useMemo, useState } from 'react'
-
+import Swal from 'sweetalert2';
+import {getMedicine} from '../GetDrug/GetDrug';
 import 
 {
   Menu, 
@@ -61,7 +62,7 @@ const languages=[
 
 
 
-export default function Home({prop}) {
+export default function Home({prop,div}) {
 
   const currentLanguageCode=Cookies.get('i18next') || 'en'
   const currentLanguage=languages.find((l)=>l.code ===currentLanguageCode)
@@ -109,21 +110,28 @@ let [updateMedicine,setUpdatemedicine]=useState([])
 let [count, setCount] = useState(0);
  
    
-    async function getMedicine() {
-   let token = localStorage.getItem("userToken");
-   let response = await axios.get(URL + 'medicine/drugs/', {
-     headers: {
-       Authorization: 'JWT ' + token
-     }
-   });
-   setCount(response.data.count / 10);
-   setMedicines(response.data.results);
+  //    async function getMedicine() {
+  //   let token = localStorage.getItem("userToken");
+  //   let response = await axios.get(URL + 'medicine/drugs/', {
+  //     headers: {
+  //       Authorization: 'JWT ' +` token
+  //     }
+  //   });
+  //   setCount(response.data.count / 10);
+  //   setMedicines(response.data.results);
  
- }
+  // }
 
   
- useEffect(()=> {getMedicine();
-} ,[]);
+  useEffect(() => {
+    const fetch = async () => {
+      const data = await getMedicine();
+      setMedicines(data.medicines);
+      setCount(data.count)
+      console.log(data.medicines); // Check the value of the medicines state
+    };
+    fetch();
+  }, []);
  
  const fetchMedicines= async(currentPage)=>{
  let token= localStorage.getItem("userToken")
@@ -236,16 +244,26 @@ setMedicines(response.data.results);
    
       const data = await response.json();
       if(data.deleted!=0){
-      getMedicine();
+     const data = await getMedicine();
+     setMedicines(data.medicines);
+     setCount(data.count)
       console.log("Medicines deleted:", data);
       // Call getMedicine() before displaying the alert message
-      alert("Selected medicines have been deleted successfully.");
+      Swal.fire(
+        'Good job!',
+        'drug deleted successfuly!',
+        'success'
+      )
     } else {
-      throw new Error("Failed to delete medicines");
+      Swal.fire(
+        ' sorry!',
+        'failed to delete the drug!',
+        'error'
+      );
     }
   } catch (error) {
     console.error(error);
-    alert("Failed to delete selected medicines.");
+  
   }
   setSelectedMedicineId({ids:[]})
 };
@@ -257,26 +275,7 @@ setMedicines(response.data.results);
 
  
 
-///update
-  const handleSetActiveDiv = (medicine) => {
-    setActiveDiv(medicine.number);
-   
-    setInputdata({
-      ...inputdata,
-       id: medicine.id,
-       name:medicine.name
-    });
-    
-    console.log(inputdata.name)
-  };
-  let {name,id}=inputdata;
-  function fillarr(){
-    setInputarr([...inputarr,{name,id}])
-    
-    console.log(inputdata,'input data what we enter')
-    setInputdata({name:''})
-    
-   }
+
 
 
    const handleUpdate = async () => {
@@ -295,11 +294,21 @@ setMedicines(response.data.results);
      
         const data = await response.json();
         if(data.updated!=0){
-        getMedicine();
+          const data = await getMedicine();
+          setMedicines(data.medicines);
+          setCount(data.count)
         console.log("Products updated:", data);
-        alert("Selected products have been updated successfully.");
+        Swal.fire(
+          'Good job!',
+          'drugs updated successfuly!',
+          'success'
+        )
       } else {
-        alert("Failed to update selected products.");
+        Swal.fire(
+          'sorry!',
+          'failed to update drugs!',
+          'error'
+        )
       }
     } catch (error) {
       console.error(error);
@@ -436,7 +445,7 @@ useEffect(() => {
     <Box sx={{ position: 'relative' }}>
   <Box position="absolute" top={0} left={60} m={2}>
     <Typography variant="h5" style={{ fontWeight: 'bold' }}>
-      Drugs
+    {t("drugs")}
     </Typography>
   </Box>
  
@@ -451,17 +460,17 @@ useEffect(() => {
     <Box position="absolute" top={90} right={60} sx={{ display: 'flex' }}>
       <Box m={2}>
         <Button onClick={prop} variant="contained" color="primary" startIcon={<AddIcon />}>
-          New Drug
+         {t(" New Drug")}
         </Button>
       </Box>
       <Box m={2}>
-        <Button onClick={handleDelete}  variant="contained" color="primary" startIcon={<AddIcon />}>
-          Delete
+        <Button onClick={handleDelete}  variant="contained" color="primary" >
+        {t("delete")}
         </Button>
       </Box>
       <Box m={2}>
-        <Button onClick={handleUpdate} variant="contained" color="primary" startIcon={<AddIcon />}>
-          Update
+        <Button onClick={handleUpdate} variant="contained" color="primary" >
+        {t("update")} 
         </Button>
       </Box>
     </Box>
@@ -574,25 +583,25 @@ useEffect(() => {
 
 
 
-    <ReactPaginate 
-     previousLabel={'previous'} 
-     nextLabel={'next'}
-     breakLabel={'...'}
-     pageCount={count}
-     onPageChange={handlePageClick}
-     containerClassName={'pagination justify-content-center'}
-     pageClassName={'page-item'}
-     pageLinkClassName={'page-link'}
-     previousClassName={'page-item'}
-     previousLinkClassName={'page-link'}
-     nextClassName={'page-item'}
-     nextLinkClassName={'page-link'}
-     breakClassName={'page-item'}
-     breakLinkClassName={'page-link'}
-     activeClassName={'active'}
-     
-     /> 
-
+<ReactPaginate 
+  previousLabel={'previous'} 
+  nextLabel={'next'}
+  breakLabel={'...'}
+  pageCount={count}
+  onPageChange={handlePageClick}
+  containerClassName={'pagination justify-content-center'}
+  pageClassName={'page-item'}
+  pageLinkClassName={'page-link'}
+  previousClassName={'page-item'}
+  previousLinkClassName={'page-link'}
+  nextClassName={'page-item'}
+  nextLinkClassName={'page-link'}
+  breakClassName={'page-item'}
+  breakLinkClassName={'page-link'}
+  activeClassName={'active'}
+  marginPagesDisplayed={1} // show one page number on either side of the current page
+  pageRangeDisplayed={1} // show one page number in the middle
+/>
    
  </>
 

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React,{useState , useEffect} from 'react'
-
+import Swal from 'sweetalert2';
+import { getMedicine } from '../GrtProducts/GetProducts';
 import 
 {
  
@@ -267,9 +268,20 @@ function handleDrugChange(drugs) {
         };
       const response= await axios.post(apiUrl+"medicine/products/bulk_create/" ,inputarr,config);
         if(response.data.success!=0){
+          getMedicine();
+          Swal.fire(
+            'Good job!',
+            'products created successfuly!',
+            'success'
+          )
           setResp(response.data.success_count)   
           setFail(0)
         } else{
+          Swal.fire(
+            'sorry!',
+            ' failed to create products !',
+            'error'
+          )
             setFail(response.data.fail_count)
             setResp(0)
             

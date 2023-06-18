@@ -45,6 +45,7 @@
     "react-router-dom": "^6.8.1",
     "react-scripts": "5.0.1",
     "styled-components": "^5.3.10",
+    "sweetalert2": "^11.7.12",
     "translate-google-api": "^1.0.4",
     "uuid": "^9.0.0",
     "web-vitals": "^2.1.4"

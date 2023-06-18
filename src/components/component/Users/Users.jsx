@@ -1,7 +1,6 @@
 import axios, { Axios } from 'axios'
 import React, { useEffect, useMemo, useState } from 'react'
-import Swal from 'sweetalert2';
-import { getMedicine } from './../GetOrders/GetOrders';
+
 import 
 {
   Select,
@@ -14,7 +13,7 @@ import
   Table,
   TableHead,
   TableBody,
-  TableRow,   
+  TableRow,
   TableCell,
   
 } from "@mui/material";
@@ -35,11 +34,11 @@ import { useTranslation} from "react-i18next";
 import i18next from 'i18next';
 
 import ReactPaginate from 'react-paginate';
-import './Orders.css'
-import { FaEdit, FaGlobe, FaPlus } from './../../../../node_modules/react-icons/fa/index.esm';
-import { FaFilter } from './../../../../node_modules/react-icons/fa/index.esm';
-import { FaTrash } from './../../../../node_modules/react-icons/fa/index.esm';
-import { FaSearch } from './../../../../node_modules/react-icons/fa/index.esm';
+
+import { FaEdit, FaGlobe, FaPlus } from 'react-icons/fa/index.esm';
+import { FaFilter } from 'react-icons/fa/index.esm';
+import { FaTrash } from 'react-icons/fa/index.esm';
+import { FaSearch } from 'react-icons/fa/index.esm';
 import Cookies from 'js-cookie';
 
 import debounce from 'lodash.debounce';
@@ -68,7 +67,7 @@ const languages=[
 
 
 
-export default function Orders() {
+export default function Users() {
  
  
   const currentLanguageCode=Cookies.get('i18next') || 'en'
@@ -120,24 +119,29 @@ const [anchorEl, setAnchorEl] = useState(null);
 
  const[count,setCount]=useState()
    
-      
-  useEffect(() => {
-    const fetch = async () => {
-      const data = await getMedicine();
-      setMedicines(data.medicines);
-      setCount(data.count)
-      console.log(data.medicines); // Check the value of the medicines state
-    };
-    fetch();
-  }, []);
+     async function getMedicine(){
+      let token= localStorage.getItem("userToken")
+      let response= await axios.get(apiUrl+'core/users/',{
+        headers:{
+          Authorization: 'JWT ' + token
+        }})   
+   
+     setMedicines(response.data);
+    // setCount(response.data.count/10)
+    
+     console.log(response.data)
+     console.log(medicines)
+     
+     
 
-
+} 
   
-
+useEffect(()=> {getMedicine();
+} ,[]);
  
  const fetchMedicines= async(currentPage)=>{
  let token= localStorage.getItem("userToken")
-      let resp= await axios.get(apiUrl+`store/orders/?page=${currentPage}`,{
+      let resp= await axios.get(apiUrl+`core/users/?page=${currentPage}`,{
         headers:{
           Authorization: 'JWT ' + token
         }})  
@@ -182,7 +186,7 @@ const [anchorEl, setAnchorEl] = useState(null);
   if(ordering!=null){
     queryParams['ordering']=ordering
   }
-  let url = `${baseUrl+'store/orders/'}?${getQueryString(queryParams)}`;
+  let url = `${baseUrl+'core/users/'}?${getQueryString(queryParams)}`;
     let token= localStorage.getItem("userToken")
     let response = await axios.get(url,{
       headers:{
@@ -251,7 +255,7 @@ const handleChange1= (event) => {
 
   function fillarr(){
     let token= localStorage.getItem("userToken")
-    fetch( apiUrl+`store/orders/${currentId}/`, {
+    fetch( apiUrl+`core/users/${currentId}/`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -271,7 +275,7 @@ const handleChange1= (event) => {
  const handleDelete = async (id) => {
   let token = localStorage.getItem("userToken");
   try {
-    const response = await fetch(apiUrl + `store/orders/${id}/`, {
+    const response = await fetch(apiUrl + `core/users/${id}/`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -281,16 +285,10 @@ const handleChange1= (event) => {
     });
       const data = await response.json();
       if(data.deleted!=0){
-        const data = await getMedicine();
-          setMedicines(data.medicines);
-          setCount(data.count)
-     // console.log("Medicines deleted:", data);
+      getMedicine();
+      console.log("Medicines deleted:", data);
       // Call getMedicine() before displaying the alert message
-      Swal.fire(
-        'Good job!',
-        'orders deleted successfuly!',
-        'success'
-      )
+      alert("Selected medicines have been deleted successfully.");
     } else {
       throw new Error("Failed to delete medicines");
     }
@@ -301,100 +299,73 @@ const handleChange1= (event) => {
   
 };
  
-///update
 
-const handleUpdate = async () => {
-  let token = localStorage.getItem("userToken");
 
-  try {
-    const response = await fetch(apiUrl + `store/orders/${upId}/`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "JWT " + token,
-      },
-      body: JSON.stringify(updatedDataDict),
-    });
+//update
+    const handleUpdate = async () => {
+      let token = localStorage.getItem("userToken");
+      try {
+        
+        const response = await fetch(apiUrl + `core/users/${upId}/`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "JWT " + token,
+          },
+          body: JSON.stringify(updatedData),
+        });
+    
+       
+          const data = await response.json();
+          if(data.updated!=0){
+          getMedicine();
+          console.log("Products updated:", data);
+          alert("Selected products have been updated successfully.");
+         
+        } else {
+          alert("Failed to update selected products.");
+    
+        }
+      } catch (error) {
+        console.error(error);
+       
+      }
+      setUpdatedData([])
+    setActiveDiv(0)
+      setInputarr([]);
+      setUpdatedData()
+      console.log(JSON.stringify(inputarr));
+    };
+
 
    
-      const data = await response.json();
    
-      if(data.updated!=0){
-        const data = await getMedicine();
-        setMedicines(data.medicines);
-        setCount(data.count)
-      //console.log("Products updated:", data);
-      Swal.fire(
-        'Good job!',
-        'order updated successfuly!',
-        'success'
-      )
-    } else {
-      Swal.fire(
-        'sorry!',
-        'failed to update order!',
-        'error'
-      )
-    }
-  } catch (error) {
-    console.error(error);
    
-  }
-  setUpdatedData([])
-setActiveDiv(0)
-  setInputarr([]);
-  console.log(JSON.stringify(inputarr));
-};
-////// 
 const [editingId, setEditingId] = useState(null);
 const [editingField, setEditingField] = useState(null);
-const [updatedData, setUpdatedData] = useState([]);
-const [upId, setUpId] = useState(null);
+const [updatedData, setUpdatedData] = useState();
+const[upId,setUpId]=useState();
 
 const handleEditClick = (id, field) => {
   setEditingId(id);
   setEditingField(field);
-  setUpId(id);
+  setUpId(id)
 };
 
 const handleEditSave = (id, field, value) => {
   console.log(`New value for field ${field} of medicine ${id}: ${value}`);
-  // Find the item with the matching ID in the updatedData array
-  const itemIndex = updatedData.findIndex(item => item.id === id);
-  if (itemIndex === -1) {
-    // If the item is not found, add a new item to the array
-    const newItem = { [field]: value };
-    setUpdatedData([...updatedData, newItem]);
-  } else {
-    // If the item is found, update its field property
-    const updatedItem = { ...updatedData[itemIndex] };
-    if (field === 'address') {
-      updatedItem[field] = parseFloat(value);
-    } else {
-      updatedItem[field] = value;
-    }
-    const newData = [...updatedData];
-    newData[itemIndex] = updatedItem;
-    setUpdatedData(newData);
-  }
-  // Reset the editing state
+  // Perform the update operation and save the new value
+  // ...
+  const updatedItem = {  [field]: value };
+  
+  setUpdatedData(...updatedData, updatedItem);
   setEditingId(null);
   setEditingField(null);
 };
-
-
-
-
-
-
-const updatedDataDict = updatedData.reduce((acc, item) => {
-  const { ...rest } = item;
-  return rest;
-}, {});
-
 useEffect(() => {
-  console.log(updatedDataDict);
-}, [updatedDataDict]);
+  console.log(updatedData);
+}, [updatedData]);
+
    
  
 
@@ -445,6 +416,14 @@ function handleDetails(id) {
     </Paper>
 
 
+    <Box sx={{ position: 'relative' }}>
+  <Box position="absolute" top={20} left={60} m={2}>
+    <Typography variant="h5" style={{ fontWeight: 'bold' }}>
+      Users
+    </Typography>
+  </Box>
+ 
+</Box>
     
 
   {/* 
@@ -456,7 +435,7 @@ function handleDetails(id) {
 
   </div>*/}
 
-      
+{/*      
 <Box position="absolute" top={100} right={60} sx={{ display: 'flex' }}>
 
       <Box m={2}>
@@ -466,14 +445,6 @@ function handleDetails(id) {
       </Box>
     </Box>
 
-<Box sx={{ position: 'relative' }}>
-  <Box position="absolute" top={80} left={60} m={2}>
-    <Typography variant="h5" style={{ fontWeight: 'bold' }}>
-      Orders
-    </Typography>
-  </Box>
- 
-</Box>
 
 
 <Box position="absolute" top={150} right={60} m={2}>
@@ -537,7 +508,7 @@ function handleDetails(id) {
    </div>
 
   </div>
-  
+       */}
 
 
 
@@ -561,102 +532,42 @@ function handleDetails(id) {
  <TableHead>
       <TableRow>    
       
-        <TableCell align="center" style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{t("Order ID")}</TableCell>
-        <TableCell align="center" style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{t("Customer Id")}</TableCell>
-        <TableCell align="center" style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{t(" Address")}</TableCell>
-        <TableCell align="center"  style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{t("order Status")}</TableCell>
-        <TableCell align="center"  style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{t("Total Price")}</TableCell>
-        <TableCell align="center"  style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{t("Placed at")}</TableCell>
-        <TableCell align="center"  style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{t("City")}</TableCell>
-        <TableCell align="center"  style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{t("Details")}</TableCell>
-        <TableCell align="center"  style={{ backgroundColor: '#f5f5f5', padding: '4px' }}>Delete </TableCell> 
+        <TableCell align="center" style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{t("user ID")}</TableCell>
+        <TableCell align="center" style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{t("username ")}</TableCell>
+        <TableCell align="center" style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{t(" email")}</TableCell>
+        <TableCell align="center"  style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{t("first name")}</TableCell>
+        <TableCell align="center"  style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{t(" last name")}</TableCell>
+        <TableCell align="center"  style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{t(" profile type")}</TableCell>
+        <TableCell align="center"  style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{t("person")}</TableCell>
+       <TableCell align="center"  style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{t("staff")}</TableCell>
+       <TableCell align="center"  style={{ backgroundColor: '#f5f5f5',padding:'4px' }}>{t("super User")}</TableCell>
       </TableRow>
     </TableHead>
-    
     <TableBody>
-  {medicines.map((medicine) => (
-    <TableRow key={medicine.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-     
-
-      <TableCell    align="center"   style={{ padding: '4px' }}>{medicine.id}</TableCell>
-
-      <TableCell align="center"
-        style={{ padding: '4px' }}>
-        {medicine.customer}
-     
-      </TableCell>
-      <TableCell
-align='center'
-style={{ padding: '4px' }}
-onClick={() => handleEditClick(medicine.id, 'address')}
->
-{editingId === medicine.id && editingField === 'address' ? (
-
-
-<input
-type="text"
-defaultValue={medicine.address.id}
-onBlur={(event) =>
-handleEditSave(medicine.id, 'address', event.target.value)
-}
-/>
-) : (
-medicine.address.id
-)}
-</TableCell> 
-
-      <TableCell
-         align='center'
-        style={{ padding: '4px' }}
-        onClick={() => handleEditClick(medicine.id, 'order_status')}
-      >
-        {editingId === medicine.id && editingField === 'order_status' ? (
-            <select
-            defaultValue={medicine.order_status}
-            onBlur={(event) => handleEditSave(medicine.id, 'order_status', event.target.value)}
-          >
-            <option value="CON">Confirmed</option>
-            <option value="COM"> Complete</option>
-            <option value="PEN"> Pending</option>
-            <option value="CAN"> Canceled</option>
-          </select>
-   
-        ) : (
-          medicine.order_status === 'PEN' ? 'Pending' :
-          medicine.order_status === 'CAN' ? 'Canceled' :
-          medicine.order_status === 'COM' ? 'Complete' :
-          medicine.order_status === 'CON' ? 'Confirmed' :
-          medicine.order_status
-        )}
-      </TableCell>
-      
-      <TableCell align="center"
-        style={{ padding: '4px' }}>
-        {medicine.total_price}
-     
-      </TableCell>
-      
-      <TableCell align="center"
-        style={{ padding: '4px' }}>
-        {medicine.placed_at}
-     
-      </TableCell>
-      
-      <TableCell align="center"
-        style={{ padding: '4px' }}>
-        {medicine.address.city}
-     
-      </TableCell>
-      <TableCell align="center"
-        style={{ padding: '4px' }}>
-         <Button  onClick={()=>handleDetails(medicine.id)}>Details</Button>
-      </TableCell>
+  {medicines.map((user) => (
+    <TableRow key={user.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+      <TableCell align="center" style={{ padding: '4px' }}>{user.id}</TableCell>
+      <TableCell align="center" style={{ padding: '4px' }}>{user.username}</TableCell>
+      <TableCell align="center" style={{ padding: '4px' }}>{user.email}</TableCell>
+      <TableCell align="center" style={{ padding: '4px' }}>{user.first_name}</TableCell>
+      <TableCell align="center" style={{ padding: '4px' }}>{user.last_name}</TableCell>
+      <TableCell align="center" style={{ padding: '4px' }}>{user.profile_type}</TableCell>
+      <TableCell align="center" style={{ padding: '4px' }}>{user.person}</TableCell>
       <TableCell align="center" style={{ padding: '4px' }}>
-        
-        <Button  onClick={() => handleDelete(medicine.id)} >delete</Button>
-    
-    </TableCell>
-
+  {user.is_staff ? (
+    <i className="fa fa-check-circle text-success"></i>
+  ) : (
+    <i className="fa fa-times-circle text-danger"></i>
+  )}
+</TableCell>
+<TableCell align="center" style={{ padding: '4px' }}>
+  {user.is_superuser? (
+    <i className="fa fa-check-circle text-success"></i>
+  ) : (
+    <i className="fa fa-times-circle text-danger"></i>
+  )}
+</TableCell>
+      
     </TableRow>
   ))}
 </TableBody>
@@ -680,25 +591,24 @@ medicine.address.id
 
 
 
-<ReactPaginate 
-  previousLabel={'previous'} 
-  nextLabel={'next'}
-  breakLabel={'...'}
-  pageCount={count}
-  onPageChange={handlePageClick}
-  containerClassName={'pagination justify-content-center'}
-  pageClassName={'page-item'}
-  pageLinkClassName={'page-link'}
-  previousClassName={'page-item'}
-  previousLinkClassName={'page-link'}
-  nextClassName={'page-item'}
-  nextLinkClassName={'page-link'}
-  breakClassName={'page-item'}
-  breakLinkClassName={'page-link'}
-  activeClassName={'active'}
-  marginPagesDisplayed={1} // show one page number on either side of the current page
-  pageRangeDisplayed={1} // show one page number in the middle
-/>
+    <ReactPaginate 
+     previousLabel={'previous'} 
+     nextLabel={'next'}
+     breakLabel={'...'}
+     pageCount={count}
+     onPageChange={handlePageClick}
+     containerClassName={'pagination justify-content-center'}
+     pageClassName={'page-item'}
+     pageLinkClassName={'page-link'}
+     previousClassName={'page-item'}
+     previousLinkClassName={'page-link'}
+     nextClassName={'page-item'}
+     nextLinkClassName={'page-link'}
+     breakClassName={'page-item'}
+     breakLinkClassName={'page-link'}
+     activeClassName={'active'}
+     
+     /> 
 
 
  </>

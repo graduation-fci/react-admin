@@ -12,6 +12,7 @@ import New from './../New/New';
 import Dash from '../Dash/Dash';
 import OrderDetails from './../OrderDetails/OrderDetails';
 import Reset from '../Reset/Reset';
+import Users from '../Users/Users';
 
 
 
@@ -41,6 +42,7 @@ export default function App() {
       <Route path='/dash' element={<Dash/>}/>
       <Route path='/orderdetails' element={<OrderDetails/>}/>
      <Route path='/reset' element={<Reset/>}/>
+     <Route path='/users' element={<Users/>}/>
       </Routes>
       
     </div>

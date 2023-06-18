@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React,{useState} from 'react'
-
+import Swal from 'sweetalert2';
+import { getMedicine } from '../GetDrug/GetDrug';
 
 import 
 {
@@ -94,10 +95,20 @@ async function medicineSubmit(e) {
   const response = await axios.post(apiUrl + 'medicine/drugs/bulk_create/', inputarr, config);
  
   if (response.data.success != 0) {
+    getMedicine()
+    Swal.fire(
+      'Good job!',
+      'drugs created successfuly!',
+      'success'
+    )
     setResp(response.data.success_count);
-   
     setFail(0);
   } else {
+    Swal.fire(
+      'sorry!',
+      'failed to create drugs!',
+      'error'
+    )
     setFail(response.data.fail_count);
     setResp(0);
   }

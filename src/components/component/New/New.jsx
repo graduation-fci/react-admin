@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { FaPlus, FaTrash, FaEdit, FaList, FaChartBar, FaCapsules } from 'react-icons/fa';
 import './New.css';
+import { getMedicine } from '../GetDrug/GetDrug';
 import {
   UilEstate,
   UilClipboardAlt,
@@ -30,6 +31,8 @@ import { CssBaseline,AppBar,Toolbar,List,Typography,Divider,
 } from '@mui/material';
 import { Dashboard } from '@mui/icons-material';
 import { useEffect } from 'react';
+import Users from '../Users/Users';
+
 
 
 
@@ -66,6 +69,9 @@ const New = () => {
       case 'orders':
         setActiveDiv(7);
         break;
+        case 'Users':
+          setActiveDiv(8);
+          break;
       default:
         setActiveDiv(0);
     }
@@ -84,12 +90,13 @@ const New = () => {
         </div>
       </div>
       <ul className="sidebar-menu">
-        <li>
-          <button onClick={() =>{ handleSetActiveDiv(1);handleClick('drugs');}} style={{ padding: '0.5rem' }}>
-            <FaCapsules style={{ marginRight: '0.5rem' }} />
-             Drugs
-          </button>
-        </li>
+      <li>
+        <button onClick={() => { handleSetActiveDiv(1); handleClick('drugs'); }} style={{ padding: '0.5rem' }}>
+          <FaCapsules style={{ marginRight: '0.5rem' }} />
+          Drugs
+        </button>
+       
+      </li>
         <li>
         <button onClick={() => {
   handleSetActiveDiv(2);
@@ -118,9 +125,9 @@ const New = () => {
           </button>  
         </li>
         <li>
-          <button  onClick={() =>handleClick('customers')} style={{ padding: '0.5rem' }}>
+          <button  onClick={() => {handleSetActiveDiv(8);handleClick('Users')}} style={{ padding: '0.5rem' }}>
             <UilUsersAlt style={{ marginRight: '0.5rem' }} />
-            Customers
+            Users
           </button>
         </li>  
         <li>
@@ -153,6 +160,9 @@ const New = () => {
       </div>
       <div className="content-container" style={{ display: activeDiv === 7 ? 'block' : 'none' }}>
         <Orders />
+      </div>
+      <div className="content-container" style={{ display: activeDiv === 8 ? 'block' : 'none' }}>
+        <Users />
       </div>
     </div>
   </div>

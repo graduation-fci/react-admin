@@ -1,5 +1,7 @@
 import axios, { Axios } from 'axios'
 import React, { useRef , useEffect, useMemo, useState } from 'react'
+import Swal from 'sweetalert2';
+import { getMedicine } from '../GrtProducts/GetProducts';
 import 
 {
   Menu, 
@@ -121,23 +123,17 @@ export default function Products1({prop}) {
   };
  
  const[count,setCount]=useState()  
-     async function getMedicine(){
-      let token= localStorage.getItem("userToken")
-      let response= await axios.get(apiUrl+'medicine/products/',{
-     headers:{
-      Authorization: 'JWT ' + token
-     }}) 
    
-     setMedicines(response.data.results);
-     setCount(response.data.count/10)
-   
-
-} 
-
-
-  
- useEffect(()=> {getMedicine();
-} ,[]);
+  useEffect(() => {
+    const fetch = async () => {
+      const data = await getMedicine();
+      setMedicines(data.medicines);
+      setCount(data.count)
+      console.log(data.medicines); // Check the value of the medicines state
+    };
+    fetch();
+  }, []);
+ 
  
  const fetchMedicines= async(currentPage)=>{
       let token= localStorage.getItem("userToken")
@@ -330,11 +326,21 @@ const handleCategorySelect = (id) => {
    
       const data = await response.json();
       if(data.deleted_count!=0){
-        getMedicine()
+        const data = await getMedicine();
+     setMedicines(data.medicines);
+     setCount(data.count)
       console.log("Products deleted:", data);
-      alert("Selected products have been deleted successfully.");
+      Swal.fire(
+        'Good job!',
+        'products deleted successfuly!',
+        'success'
+      )
     } else {
-      alert("Failed to delete selected products.");
+      Swal.fire(
+        'sorry!',
+        'failed to delete!',
+        'error'
+      )
     }
   } catch (error) {
     console.error(error);
@@ -386,13 +392,22 @@ function fillarr(){
       const data = await response.json();
    
       if(data.updated!=0){
-        getMedicine()
+        const data = await getMedicine();
+        setMedicines(data.medicines);
+        setCount(data.count)
       console.log("Products updated:", data);
-      alert("Selected products have been updated successfully.");
+      Swal.fire(
+        'Good job!',
+        'product updated successfuly!',
+        'success'
+      )
     } else {
-      alert("Failed to update selected products.");
-    }
-  } catch (error) {
+      Swal.fire(
+        'sorry!',
+        'failed to update!',
+        'success'
+      )
+  }} catch (error) {
     console.error(error);
    
   }
@@ -558,7 +573,7 @@ const [editingId, setEditingId] = useState(null);
     <Box sx={{ position: 'relative' }}>
   <Box position="absolute" top={0} left={60} m={2}>
     <Typography variant="h5" style={{ fontWeight: 'bold' }}>
-      Products
+      {t("products")}
     </Typography>
   </Box>
   </Box>
@@ -568,17 +583,17 @@ const [editingId, setEditingId] = useState(null);
   <Box position="absolute" top={60} right={60} sx={{ display: 'flex' }}>
       <Box m={2}>
         <Button onClick={prop} variant="contained" color="primary" startIcon={<AddIcon />}>
-          New Products
+          {t("New Products")}
         </Button>
       </Box>
       <Box m={2}>
-        <Button onClick={handleDelete}  variant="contained" color="primary" startIcon={<AddIcon />}>
-          Delete
+        <Button onClick={handleDelete}  variant="contained" color="primary" >
+        {t("delete")}
         </Button>
       </Box>
       <Box m={2}>
-        <Button onClick={handleUpdate} variant="contained" color="primary" startIcon={<AddIcon />}>
-          Update
+        <Button onClick={handleUpdate} variant="contained" color="primary" >
+        {t("update")} 
         </Button>
       </Box>
     </Box>
@@ -601,7 +616,7 @@ const [editingId, setEditingId] = useState(null);
               type="text"
               name="categoryMissed"
               onChange={(event) => handleSearchDrugChange(event)}
-              placeholder="Search by category name..."
+              placeholder="Search drug name..."
             />
          
         </li>
@@ -629,7 +644,7 @@ const [editingId, setEditingId] = useState(null);
     
       <li>
      
-        <input type="text"  name='categoryMissed'  onChange={(event)=>handleSearchInputChange(event)}  placeholder="Search by category name..." />
+        <input type="text"  name='categoryMissed'  onChange={(event)=>handleSearchInputChange(event)}  placeholder="Search category name..." />
      
       
     </li>
@@ -874,24 +889,25 @@ const [editingId, setEditingId] = useState(null);
 
     <div>
 
-<ReactPaginate 
-     previousLabel={'previous'} 
-     nextLabel={'next'}
-     breakLabel={'...'}
-     pageCount={count}
-     onPageChange={handlePageClick}
-     containerClassName={'pagination justify-content-center'}
-     pageClassName={'page-item'}
-     pageLinkClassName={'page-link'}
-     previousClassName={'page-item'}
-     previousLinkClassName={'page-link'}
-     nextClassName={'page-item'}
-     nextLinkClassName={'page-link'}
-     breakClassName={'page-item'}
-     breakLinkClassName={'page-link'}
-     activeClassName={'active'}
-     
-     /> 
+    <ReactPaginate 
+  previousLabel={'previous'} 
+  nextLabel={'next'}
+  breakLabel={'...'}
+  pageCount={count}
+  onPageChange={handlePageClick}
+  containerClassName={'pagination justify-content-center'}
+  pageClassName={'page-item'}
+  pageLinkClassName={'page-link'}
+  previousClassName={'page-item'}
+  previousLinkClassName={'page-link'}
+  nextClassName={'page-item'}
+  nextLinkClassName={'page-link'}
+  breakClassName={'page-item'}
+  breakLinkClassName={'page-link'}
+  activeClassName={'active'}
+  marginPagesDisplayed={1} // show one page number on either side of the current page
+  pageRangeDisplayed={1} // show one page number in the middle
+/>
      </div>
 
 
